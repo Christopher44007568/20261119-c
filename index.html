@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>镜面反射：镜像相机 + 斜裁剪平面</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0e12; color: #dde3ea;
+    font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace; }
+  #gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  #hud { position: fixed; top: 10px; left: 10px; background: rgba(10,14,20,.82);
+    border: 1px solid #2a3442; border-radius: 6px; padding: 10px 12px;
+    width: 340px; white-space: pre-wrap; }
+  #hud b { color: #7fd4ff; }
+  #hud .warn { color: #ffb347; }
+  #hud label { display: inline-block; margin-right: 10px; }
+  #hud select, #hud input { vertical-align: middle; }
+  #err { position: fixed; bottom: 10px; left: 10px; color: #ff7b72; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="hud">loading…</div>
+<div id="err"></div>
+<script type="module">
+  import { start } from './src/main.mjs';
+  start(document.getElementById('gl'), document.getElementById('hud'))
+    .catch((e) => { document.getElementById('err').textContent = e.stack || e; });
+</script>
+</body>
+</html>
