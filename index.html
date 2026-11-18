@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网格可定向性诊断器</title>
+  <style>
+    :root {
+      --bg: #10151d;
+      --panel: #18202c;
+      --panel2: #1f2a39;
+      --text: #e6edf5;
+      --muted: #8da2b8;
+      --accent: #5db1ff;
+      --good: #4fd08a;
+      --bad: #ff6b6b;
+      --warn: #ffc857;
+      --border: #2b3a4d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      padding: 10px 18px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    header h1 { font-size: 17px; margin: 0; font-weight: 600; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    button, select {
+      background: var(--panel2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    button:hover { border-color: var(--accent); }
+    button.active { background: var(--accent); color: #08111c; border-color: var(--accent); }
+    main { flex: 1; display: flex; min-height: 0; }
+    #view { flex: 1; position: relative; min-width: 0; }
+    #canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+    #canvas:active { cursor: grabbing; }
+    #side {
+      width: 380px;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 14px 16px;
+      font-size: 13px;
+    }
+    .card {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+    }
+    .card h2 {
+      font-size: 13px;
+      margin: 0 0 8px;
+      color: var(--accent);
+      letter-spacing: .5px;
+    }
+    .stat { display: flex; justify-content: space-between; padding: 3px 0; color: var(--muted); }
+    .stat b { color: var(--text); font-weight: 600; }
+    .verdict { font-size: 15px; font-weight: 700; padding: 8px 10px; border-radius: 8px; }
+    .verdict.ok { background: rgba(79,208,138,.14); color: var(--good); }
+    .verdict.no { background: rgba(255,107,107,.14); color: var(--bad); }
+    .row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .pill {
+      font-size: 11px; padding: 2px 8px; border-radius: 999px;
+      background: #243245; color: var(--muted); border: 1px solid var(--border);
+    }
+    .step {
+      padding: 7px 9px; border-radius: 7px; margin: 4px 0;
+      background: #22303f; cursor: pointer; border: 1px solid transparent;
+    }
+    .step:hover { border-color: var(--accent); }
+    .step.sel { border-color: var(--warn); background: #2c3440; }
+    .step .tag { font-size: 11px; color: var(--muted); }
+    .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; }
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+    #hint {
+      position: absolute; bottom: 12px; left: 12px;
+      background: rgba(16,21,29,.82); padding: 7px 11px; border-radius: 8px;
+      font-size: 12px; color: var(--muted); pointer-events: none;
+    }
+    .explode-wrap { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    input[type=range] { flex: 1; }
+    .note { color: var(--muted); line-height: 1.55; }
+    .kv { color: var(--muted); }
+    .kv b { color: var(--text); }
+    .fail { color: var(--bad); }
+    .ok2 { color: var(--good); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>网格可定向性诊断器</h1>
+    <div class="toolbar">
+      <label style="font-size:12px;color:var(--muted)">示例
+        <select id="meshSelect">
+          <option value="torus">圆环（闭合 · 可定向）</option>
+          <option value="annulus">环形带（带边界 · 可定向）</option>
+          <option value="mobius" selected>莫比乌斯带（带边界 · 不可定向）</option>
+          <option value="klein">克莱因瓶（闭合 · 不可定向）</option>
+        </select>
+      </label>
+      <button id="btnPropagate" class="active">传播方向</button>
+      <button id="btnLoop">最短矛盾环</button>
+      <button id="btnCover">可定向双覆盖</button>
+      <button id="btnFlip">翻转实验（反面）</button>
+      <button id="btnReset">重置</button>
+    </div>
+  </header>
+  <main>
+    <div id="view">
+      <canvas id="canvas" width="900" height="760"></canvas>
+      <div id="hint">拖拽旋转 · 滚轮缩放 · 点击面查看传播约束 · 点击环步骤定位边</div>
+    </div>
+    <aside id="side">
+      <div class="card" id="verdictCard"></div>
+      <div class="card" id="statsCard"></div>
+      <div class="card" id="loopCard" style="display:none"></div>
+      <div class="card" id="coverCard" style="display:none"></div>
+      <div class="card" id="flipCard" style="display:none"></div>
+      <div class="card" id="detailCard" style="display:none"></div>
+    </aside>
+  </main>
+  <script src="topology.js"></script>
+  <script src="meshes.js"></script>
+  <script src="render.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

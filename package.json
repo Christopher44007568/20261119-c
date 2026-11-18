@@ -1,0 +1,9 @@
+{
+  "name": "mesh-orientability-diagnoser",
+  "version": "1.0.0",
+  "private": true,
+  "description": "网格可定向性诊断器：方向传播、最短矛盾环、可定向双覆盖",
+  "scripts": {
+    "test": "node test/topology.test.js && node test/app.smoke.js"
+  }
+}
