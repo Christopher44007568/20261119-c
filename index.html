@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#080b0f" />
+    <title>Winding Field Lab — 广义绕数包含查询</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23080b0f'/%3E%3Cpath d='M5 16 16 5l11 11-11 11Z' fill='none' stroke='%23f1b45f'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23f1b45f'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="masthead">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 34 34" aria-hidden="true">
+            <path d="M4 17 17 4l13 13-13 13Z" />
+            <path d="M9.5 17 17 9.5l7.5 7.5-7.5 7.5Z" />
+            <circle cx="17" cy="17" r="2.4" />
+          </svg>
+          <div>
+            <div class="eyebrow">TOPOLOGY / SOLID ANGLE</div>
+            <h1>Winding Field Lab</h1>
+          </div>
+        </div>
+        <div class="header-readout">
+          <span class="live-dot"></span>
+          <span>EXACT TRIANGLE QUERY</span>
+          <span class="header-rule"></span>
+          <span id="header-faces">728 FACES</span>
+        </div>
+        <div class="header-actions">
+          <button class="button button-quiet" id="frame-button" type="button">Frame view</button>
+          <button class="button button-primary" id="audit-button" type="button">
+            Run audit
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel panel-left">
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">01</span>
+              <h2>Scene</h2>
+            </div>
+            <div class="scene-list" role="group" aria-label="Test scene">
+              <button class="scene-button is-active" data-scene="sphere" type="button">
+                <span class="scene-glyph glyph-sphere"></span>
+                <span><strong>Closed sphere</strong><small>orientable · W = +1</small></span>
+                <span class="scene-check">✓</span>
+              </button>
+              <button class="scene-button" data-scene="flipped" type="button">
+                <span class="scene-glyph glyph-flipped"></span>
+                <span><strong>Inverted sphere</strong><small>flipped · W = −1</small></span>
+                <span class="scene-check">✓</span>
+              </button>
+              <button class="scene-button" data-scene="sheet" type="button">
+                <span class="scene-glyph glyph-sheet"></span>
+                <span><strong>Open sheet</strong><small>non-closed · fractional</small></span>
+                <span class="scene-check">✓</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">02</span>
+              <h2>Mesh telemetry</h2>
+            </div>
+            <dl class="telemetry-grid">
+              <div><dt>Faces</dt><dd id="stat-faces">728</dd></div>
+              <div><dt>Boundary</dt><dd id="stat-boundary">closed</dd></div>
+              <div><dt>Signed vol.</dt><dd id="stat-volume">+4.102</dd></div>
+              <div><dt>Area</dt><dd id="stat-area">12.435</dd></div>
+            </dl>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">03</span>
+              <h2>Field parameters</h2>
+            </div>
+            <label class="range-control" for="epsilon-range">
+              <span class="range-label"><span>Surface band ε</span><output id="epsilon-output">0.008</output></span>
+              <input id="epsilon-range" type="range" min="0.002" max="0.04" step="0.001" value="0.008" />
+              <span class="range-hint">Actual point–triangle distance</span>
+            </label>
+            <label class="range-control" for="band-range">
+              <span class="range-label"><span>Transition band δ</span><output id="band-output">0.035</output></span>
+              <input id="band-range" type="range" min="0.005" max="0.14" step="0.005" value="0.035" />
+              <span class="range-hint">inert region around |W| = 0.5</span>
+            </label>
+          </section>
+
+          <section class="panel-section panel-section-cut">
+            <div class="section-heading">
+              <span class="section-index">04</span>
+              <h2>Surface surgery</h2>
+            </div>
+            <button class="cut-toggle" id="cut-toggle" type="button" aria-pressed="false">
+              <span class="cut-toggle-icon">⌁</span>
+              <span><strong>Cut faces</strong><small>Click a triangle to remove / restore</small></span>
+              <span class="switch" aria-hidden="true"><span></span></span>
+            </button>
+            <div class="action-row">
+              <button class="button button-quiet" id="remove-random" type="button">Remove 10%</button>
+              <button class="button button-quiet" id="undo-cut" type="button">Undo</button>
+              <button class="button button-quiet" id="restore-all" type="button">Restore</button>
+            </div>
+            <div class="cut-summary"><span id="removed-count">0</span> faces removed · <span id="cut-hint">mesh watertight</span></div>
+          </section>
+
+          <section class="panel-section panel-section-query">
+            <div class="section-heading">
+              <span class="section-index">05</span>
+              <h2>Query point</h2>
+            </div>
+            <div class="coordinate-grid">
+              <label><span>X</span><input id="query-x" type="number" step="0.05" value="0" /></label>
+              <label><span>Y</span><input id="query-y" type="number" step="0.05" value="0" /></label>
+              <label><span>Z</span><input id="query-z" type="number" step="0.05" value="0" /></label>
+            </div>
+            <div class="quick-probes">
+              <button type="button" data-probe="center">center</button>
+              <button type="button" data-probe="outside">outside</button>
+              <button type="button" data-probe="vertex">on vertex</button>
+              <button type="button" data-probe="edge">on edge</button>
+            </div>
+          </section>
+        </aside>
+
+        <section class="stage" aria-label="3D winding field viewer">
+          <canvas id="scene-canvas"></canvas>
+          <div class="stage-topbar">
+            <div class="scene-title-block">
+              <span class="stage-kicker">ACTIVE MANIFOLD</span>
+              <strong id="scene-title">Closed sphere</strong>
+            </div>
+            <div class="stage-state">
+              <span id="scene-orientation">OUTWARD</span>
+              <span class="state-divider"></span>
+              <span id="scene-topology">WATERTIGHT</span>
+            </div>
+          </div>
+          <div class="stage-badge" id="cut-badge">
+            <span></span> CUT MODE · CLICK TRIANGLES
+          </div>
+          <div class="scene-tooltip" id="scene-tooltip"></div>
+          <div class="stage-legend">
+            <span><i class="legend-dot dot-inside"></i>inside</span>
+            <span><i class="legend-dot dot-outside"></i>outside</span>
+            <span><i class="legend-dot dot-uncertain"></i>surface / transition</span>
+          </div>
+          <div class="stage-help">
+            <span>drag to orbit</span>
+            <span>wheel to zoom</span>
+            <span>double-click to frame</span>
+          </div>
+        </section>
+
+        <aside class="panel panel-right">
+          <section class="result-card" id="result-card">
+            <div class="result-topline">
+              <span class="section-index">QUERY RESULT</span>
+              <span class="result-status" id="result-status">INSIDE</span>
+            </div>
+            <div class="winding-number">
+              <span class="winding-symbol">W</span>
+              <span id="winding-value">1.000000</span>
+            </div>
+            <div class="solid-angle-row">
+              <span>ΣΩ / 4π</span>
+              <strong id="solid-angle">12.566371 sr</strong>
+            </div>
+            <div class="result-facts">
+              <div><span>Nearest active face</span><strong id="nearest-distance">0.9875</strong></div>
+              <div><span>Distance measure</span><strong>point → triangle</strong></div>
+              <div><span>Active / total</span><strong id="face-ratio">728 / 728</strong></div>
+            </div>
+            <p class="result-note" id="result-note">
+              Outward-oriented closed mesh. W is close to one.
+            </p>
+          </section>
+
+          <section class="panel-section slice-section">
+            <div class="section-heading">
+              <span class="section-index">06</span>
+              <h2>Spatial slice</h2>
+              <button class="mini-toggle is-active" id="values-toggle" type="button" aria-pressed="true">W values</button>
+            </div>
+            <div class="axis-tabs" role="group" aria-label="Slice axis">
+              <button type="button" data-axis="0">X</button>
+              <button class="is-active" type="button" data-axis="1">Y</button>
+              <button type="button" data-axis="2">Z</button>
+            </div>
+            <label class="slice-offset" for="slice-range">
+              <span><span id="slice-axis-label">Y slice</span><output id="slice-output">0.000</output></span>
+              <input id="slice-range" type="range" min="-1.2" max="1.2" step="0.02" value="0" />
+            </label>
+            <div class="slice-frame">
+              <canvas id="slice-canvas"></canvas>
+              <div class="slice-axis-caption slice-caption-h" id="slice-caption-h">Z</div>
+              <div class="slice-axis-caption slice-caption-v" id="slice-caption-v">Y</div>
+              <div class="slice-hover-plane" id="slice-hover-plane"></div>
+            </div>
+            <div class="slice-readout">
+              <span id="slice-coords">x 0.00 · z 0.00</span>
+              <strong id="slice-winding">W 0.0000</strong>
+            </div>
+            <div class="slice-scale">
+              <span>−1</span><span class="scale-gradient"></span><span>0</span><span class="scale-gradient scale-gradient-warm"></span><span>+1</span>
+            </div>
+            <p class="microcopy">Hover for a value; click to move the query point onto this plane.</p>
+          </section>
+
+          <section class="panel-section audit-section">
+            <div class="section-heading">
+              <span class="section-index">07</span>
+              <h2>Analytic audit</h2>
+              <span class="audit-score" id="audit-score">—</span>
+            </div>
+            <div class="audit-list" id="audit-list">
+              <div class="audit-placeholder">Run the audit to compare winding containment against the analytic sphere.</div>
+            </div>
+            <p class="microcopy" id="audit-note">
+              Closed and inverted spheres share |p| &lt; R. The open sheet has no analytic ball equivalent; it is checked for fractional, side-antisymmetric winding.
+            </p>
+          </section>
+
+          <section class="convention-card">
+            <div class="convention-title">Boundary convention</div>
+            <p>
+              A query within ε of any active triangle — including its interior, edge, or vertex — is reported as
+              <strong>SURFACE / BOUNDARY</strong>. Its raw W is shown, but containment is deliberately left undetermined.
+              No bounding-box hit is treated as containment.
+            </p>
+          </section>
+        </aside>
+      </main>
+    </div>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
