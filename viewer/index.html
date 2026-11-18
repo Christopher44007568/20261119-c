@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>切线空间法线贴图 / TBN 与镜像 UV 查看器</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #14171d; color: #dfe3ea;
+    font-family: system-ui, "Segoe UI", sans-serif; overflow: hidden; }
+  #gl { width: 100vw; height: 100vh; display: block; }
+  #panel { position: fixed; top: 12px; left: 12px; width: 280px; padding: 14px;
+    background: rgba(22,26,34,.92); border: 1px solid #2c333f; border-radius: 10px;
+    font-size: 13px; line-height: 1.55; }
+  #panel h1 { font-size: 14px; margin: 0 0 8px; }
+  #panel label { display: block; margin: 6px 0 2px; }
+  #panel input[type=range] { width: 100%; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .hint { color: #93a0b4; font-size: 12px; margin-top: 8px; }
+  button { background: #28303d; color: #dfe3ea; border: 1px solid #3a4453;
+    border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+  button:hover { background: #33405a; }
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="panel">
+  <h1>切线空间法线贴图光照</h1>
+  <label><input type="checkbox" id="modeTbn"> 手性 / TBN 调试视图</label>
+  <label><input type="checkbox" id="showAxes" checked> 显示 TBN 轴</label>
+  <label><input type="checkbox" id="showGrid" checked> 显示网格线</label>
+  <label>法线贴图旋转: <span id="rotVal">0°</span></label>
+  <input type="range" id="rot" min="0" max="360" value="0">
+  <div class="row" style="margin-top:6px">
+    <button id="rot90">旋转 +90°</button>
+    <button id="reset">重置视角</button>
+  </div>
+  <div class="hint">
+    <div><span class="sw" style="background:#3b8f43"></span> 直接 UV 岛，手性 +1</div>
+    <div><span class="sw" style="background:#c24033"></span> 镜像 UV 岛，手性 −1</div>
+    <div><span class="sw" style="background:#777d88"></span> 零 UV 面积，声明退化法线</div>
+    <div style="margin-top:4px">轴: <b style="color:#ff5547">T 红</b> /
+      <b style="color:#47ff63">B 绿</b> / <b style="color:#5f86ff">N 蓝</b></div>
+    <div style="margin-top:4px">鼠标左键旋转，滚轮缩放，右键平移。</div>
+  </div>
+</div>
+
+<script id="vs" type="x-shader/x-vertex">#version 300 es
+layout(location=0) in vec3 aPos;
+layout(location=1) in vec3 aNormal;
+layout(location=2) in vec2 aUv;
+layout(location=3) in vec3 aTangent;
+layout(location=4) in vec3 aRefNormal;
+layout(location=5) in float aSign;
+layout(location=6) in float aDeg;
+
+uniform mat4 uViewProj;
+
+out vec3 vPos;
+out vec3 vNormal;
+out vec2 vUv;
+out vec3 vTangent;
+out float vSign;
+out float vDeg;
+
+void main() {
+  vPos = aPos;
+  vNormal = aNormal;
+  vUv = aUv;
+  vTangent = aTangent;
+  vSign = aSign;
+  vDeg = aDeg;
+  gl_Position = uViewProj * vec4(aPos, 1.0);
+}
+</script>
+
+<script id="fs" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+
+in vec3 vPos;
+in vec3 vNormal;
+in vec2 vUv;
+in vec3 vTangent;
+in float vSign;
+in float vDeg;
+
+uniform float uMapRotation;
+uniform int uDebugTbn;
+uniform vec3 uLightDir;
+uniform vec3 uViewPos;
+uniform vec3 uDegenerateNormal;
+
+out vec4 frag;
+
+// Procedural height field, identical to the C++ NormalMap.
+float heightFn(vec2 p) {
+  vec2 d = (p - 0.5) * 2.0;
+  float bump = exp(-dot(d, d) * 2.2);
+  float ridge = 0.8 * exp(-d.y * d.y * 8.0) * (0.6 + 0.4 * d.x);
+  return 2.5 * bump + ridge;
+}
+
+vec3 sampleNormal(vec2 uv, float rot) {
+  float c = cos(-rot), s = sin(-rot);
+  vec2 p = uv - 0.5;
+  p = mat2(c, -s, s, c) * p + 0.5;
+  p = fract(p);
+  float e = 1.0 / 64.0;
+  float hL = heightFn(p - vec2(e, 0.0));
+  float hR = heightFn(p + vec2(e, 0.0));
+  float hD = heightFn(p - vec2(0.0, e));
+  float hU = heightFn(p + vec2(0.0, e));
+  return normalize(vec3((hL - hR) * 2.2, (hD - hU) * 2.2, 1.0));
+}
+
+void main() {
+  vec3 N = normalize(vNormal);
+
+  if (uDebugTbn == 1) {
+    if (vDeg > 0.5) frag = vec4(0.47, 0.49, 0.53, 1.0);
+    else if (vSign < 0.0) frag = vec4(0.76, 0.25, 0.20, 1.0);
+    else frag = vec4(0.23, 0.56, 0.26, 1.0);
+    return;
+  }
+
+  vec3 worldN;
+  if (vDeg > 0.5) {
+    // Zero UV area: declared fallback normal, no texture division involved.
+    worldN = normalize(uDegenerateNormal);
+  } else {
+    // Per-fragment Gram-Schmidt orthogonalization of the tangent.
+    vec3 T = normalize(vTangent - N * dot(N, vTangent));
+    vec3 B = cross(N, T) * vSign;
+    vec3 tn = sampleNormal(vUv, uMapRotation);
+    worldN = normalize(mat3(T, B, N) * tn);
+  }
+
+  vec3 L = normalize(uLightDir);
+  vec3 V = normalize(uViewPos - vPos);
+  vec3 H = normalize(L + V);
+  float diff = max(dot(worldN, L), 0.0);
+  float spec = pow(max(dot(worldN, H), 0.0), 80.0);
+  vec3 base = vec3(0.55, 0.62, 0.85);
+  vec3 color = base * 0.10 + base * diff * 0.70 + vec3(spec * 1.2);
+  frag = vec4(color, 1.0);
+}
+</script>
+
+<script src="mesh_data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+build/
+*.o
+*.ppm
+artifacts/test_report.txt
+viewer/mesh_data.js
+.DS_Store
