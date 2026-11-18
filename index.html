@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>SH 环境光低频近似演示</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<h1>球谐环境光：漫反射辐照度 + 低频高光近似</h1>
+
+<div id="controls">
+  <label>环境
+    <select id="env">
+      <option value="constant">常量环境</option>
+      <option value="spot" selected>单方向宽光斑</option>
+      <option value="highfreq">高频多彩光斑</option>
+    </select>
+  </label>
+  <label>SH 阶数
+    <select id="order">
+      <option value="1">L1（4 系数）</option>
+      <option value="2" selected>L2（9 系数）</option>
+      <option value="3">L3（16 系数）</option>
+    </select>
+  </label>
+  <label>环境旋转 <span id="angleVal">0°</span>
+    <input type="range" id="angle" min="0" max="360" step="1" value="30">
+  </label>
+  <label><input type="checkbox" id="spin"> 自动旋转</label>
+  <label>高光锐度 n
+    <input type="range" id="shininess" min="2" max="32" step="1" value="8">
+  </label>
+  <label>参考采样
+    <select id="samples">
+      <option value="128">128</option>
+      <option value="256" selected>256</option>
+      <option value="512">512</option>
+    </select>
+  </label>
+  <label>背景
+    <select id="bg">
+      <option value="0">真实环境</option>
+      <option value="1">SH 重建环境</option>
+      <option value="2">残差 ×5（高频无法表达部分）</option>
+    </select>
+  </label>
+</div>
+
+<canvas id="view" width="960" height="320"></canvas>
+<div id="labels"><span>SH 近似</span><span>高采样参考</span><span>差值 ×10</span></div>
+
+<div id="metrics"></div>
+
+<h2>数值验证（浏览器内实时执行）</h2>
+<button id="runChecks">运行验证</button>
+<button id="spinOnce">旋转一周（360×1°）校验系数复原</button>
+<pre id="checkOut">尚未运行。</pre>
+
+<script src="js/sh.js"></script>
+<script src="js/env.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

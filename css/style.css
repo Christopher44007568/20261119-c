@@ -1,0 +1,56 @@
+body {
+  font-family: system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #14171c;
+  color: #dde3ea;
+  margin: 20px;
+}
+h1 { font-size: 18px; }
+h2 { font-size: 15px; margin-top: 18px; }
+#controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+#controls label { display: flex; align-items: center; gap: 6px; }
+canvas {
+  display: block;
+  border: 1px solid #333a44;
+  image-rendering: pixelated;
+  max-width: 100%;
+}
+#labels {
+  display: grid;
+  grid-template-columns: repeat(3, 320px);
+  font-size: 12px;
+  color: #9fb0c3;
+  margin-top: 4px;
+}
+#labels span { text-align: center; }
+#metrics {
+  margin-top: 10px;
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  color: #a8e6a3;
+}
+pre {
+  background: #0d1014;
+  border: 1px solid #2a313b;
+  padding: 10px;
+  font-size: 12px;
+  max-width: 960px;
+  overflow-x: auto;
+}
+button {
+  background: #2563eb;
+  color: #fff;
+  border: 0;
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+button:hover { background: #1d4ed8; }
