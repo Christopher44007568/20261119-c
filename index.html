@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="使用固定点边函数与 top-left 填充规则的 CPU 三角形光栅器可视化实验。"
+    />
+    <title>RASTER LAB · 固定点三角形光栅器</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-glow" aria-hidden="true"></div>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+          </div>
+          <div>
+            <div class="eyebrow">RASTER LAB / EXPERIMENT 04</div>
+            <h1>固定点三角形光栅器</h1>
+          </div>
+        </div>
+        <div class="system-strip" aria-label="系统参数">
+          <span class="live-pill"><i></i>CPU ONLY</span>
+          <span>Q28.4</span>
+          <span>TOP-LEFT</span>
+          <span>64 × 46</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="stage-panel">
+          <div class="stage-head">
+            <div>
+              <div class="eyebrow">LIVE FRAMEBUFFER</div>
+              <h2>共享边双三角形</h2>
+            </div>
+            <div class="view-tabs" id="viewTabs" role="group" aria-label="帧缓冲视图">
+              <button class="view-tab is-active" data-view="color">颜色缓冲</button>
+              <button class="view-tab" data-view="mask">覆盖掩码</button>
+              <button class="view-tab" data-view="count">覆盖次数</button>
+              <button class="view-tab" data-view="edge">边函数</button>
+            </div>
+          </div>
+
+          <div class="canvas-frame">
+            <canvas
+              id="viewportCanvas"
+              tabindex="0"
+              aria-label="64 乘 46 像素的 CPU 光栅化结果，可拖动 A、B、C、D 顶点"
+            ></canvas>
+            <div class="canvas-badge" aria-hidden="true">
+              <span>FRAME 01</span>
+              <span>1/16 PX</span>
+            </div>
+            <div class="canvas-help">
+              拖动 <b>A</b> / <b>B</b> / <b>C</b> / <b>D</b>
+              <span>·</span>
+              悬停或点击检查像素
+            </div>
+          </div>
+
+          <div class="stage-bottom">
+            <div class="legend" id="legend" aria-live="polite"></div>
+            <div class="stage-tools">
+              <div class="overlay-toggles" aria-label="调试叠加层">
+                <button class="overlay-toggle is-on" data-overlay="grid">GRID</button>
+                <button class="overlay-toggle is-on" data-overlay="wire">WIRE</button>
+                <button class="overlay-toggle is-on" data-overlay="samples">SAMPLES</button>
+              </div>
+              <div class="warning" id="geometryWarning" hidden></div>
+            </div>
+          </div>
+
+          <div class="metrics" aria-label="场景统计">
+            <div class="metric">
+              <span class="metric-label">T1 / T2 COVERED</span>
+              <strong id="statCovered">000 / 000</strong>
+              <span class="metric-note">pixels</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">SHARED EDGE</span>
+              <strong id="statShared">0</strong>
+              <span class="metric-note">center samples</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">MAX COVERAGE</span>
+              <strong id="statMaxCoverage">1</strong>
+              <span class="metric-note">per pixel</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">OVERDRAW</span>
+              <strong id="statOverdraw">0</strong>
+              <span class="metric-note">pixels</span>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="panel inspector-panel">
+            <div class="panel-title">
+              <span><b>01</b> PIXEL INSPECTOR</span>
+              <span class="live-label"><i></i>LIVE</span>
+            </div>
+
+            <div class="pixel-head">
+              <div>
+                <div class="pixel-coord" id="pixelCoord">(31, 21)</div>
+                <div class="pixel-sub" id="fixedCoord">
+                  center = (504, 344), Q28.4
+                </div>
+              </div>
+              <div class="coverage-chip" id="coverageChip">COUNT 1</div>
+            </div>
+
+            <div class="triangle-tabs" id="triangleTabs">
+              <button class="triangle-tab is-active" data-triangle="a">
+                <span class="swatch swatch-a"></span> TRIANGLE A
+              </button>
+              <button class="triangle-tab" data-triangle="b">
+                <span class="swatch swatch-b"></span> TRIANGLE B
+              </button>
+            </div>
+
+            <div class="edge-list" id="edgeList"></div>
+            <div class="pixel-verdict" id="pixelVerdict"></div>
+            <p class="micro-copy">
+              E = 有向边函数；<b>TL</b> 表示零值边符合 top-left。
+              点击边行可切换“边函数”热图。
+            </p>
+          </section>
+
+          <section class="panel controls-panel">
+            <div class="panel-title">
+              <span><b>02</b> GEOMETRY</span>
+              <span class="tool-state" id="subpixelState">Δ 0/16 px</span>
+            </div>
+
+            <div class="control-grid">
+              <div class="control-block">
+                <div class="control-label">SUBPIXEL NUDGE</div>
+                <div class="nudge-pad" aria-label="按 1/16 像素平移全部顶点">
+                  <button data-nudge="0,-1" aria-label="向上平移">↑</button>
+                  <button data-nudge="-1,0" aria-label="向左平移">←</button>
+                  <button class="nudge-center" id="centerNudge" aria-label="重置亚像素平移">·</button>
+                  <button data-nudge="1,0" aria-label="向右平移">→</button>
+                  <button data-nudge="0,1" aria-label="向下平移">↓</button>
+                </div>
+              </div>
+              <div class="control-block order-block">
+                <div class="control-label">VERTEX ORDER</div>
+                <button class="order-button" id="orderT1"></button>
+                <button class="order-button" id="orderT2"></button>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button class="action-button" id="degenerateBtn">退化 T1</button>
+              <button class="action-button action-secondary" id="resetBtn">
+                重置场景
+              </button>
+            </div>
+          </section>
+
+          <section class="panel verify-panel">
+            <div class="panel-title">
+              <span><b>03</b> INVARIANT CHECK</span>
+              <span class="pass-badge" id="verifyBadge">PASS</span>
+            </div>
+            <div class="verify-list" id="verificationList"></div>
+            <div class="verify-foot">
+              <span id="verifySummary">等待验证</span>
+              <button id="rerunBtn">重跑</button>
+            </div>
+          </section>
+
+          <section class="formula-strip">
+            <span>E(P) = (B−A) × (P−A)</span>
+            <span>inside = E &gt; 0 ∨ (E = 0 ∧ topLeft)</span>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>CPU RASTERIZATION · NO GRAPHICS API TRIANGLE DRAW</span>
+        <span id="frameTime">-- ms / frame</span>
+      </footer>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
