@@ -1,0 +1,11 @@
+{
+  "name": "inset-straight-skeleton",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive straight-skeleton polygon inset explorer",
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "test": "node --test"
+  }
+}

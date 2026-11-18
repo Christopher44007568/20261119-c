@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="基于直骨架事件的简单多边形等速内缩轮廓实验工具"
+    />
+    <title>INNER / 直骨架内缩实验室</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48">
+              <path d="M9 6H39L43 10V38L39 42H9L5 38V10Z" />
+              <path d="M15 14H33L35 16V32L33 34H15L13 32V16Z" />
+              <path d="M20 21H28V27H20Z" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-name">INNER<span>/01</span></div>
+            <div class="brand-sub">直骨架内缩实验室</div>
+          </div>
+        </div>
+        <div class="topbar-status">
+          <span class="status-pill status-live">
+            <i></i>
+            几何内核在线
+          </span>
+          <span class="status-pill" id="auditStatus">区间检查 · 待运行</span>
+          <span class="unit-badge">UNIT SPEED <b>1.0</b> / s</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel control-panel">
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">01</span>
+              <div>
+                <h2>输入形状</h2>
+                <p>简单多边形，自动规范为逆时针</p>
+              </div>
+            </div>
+            <div class="preset-grid" id="presetGrid"></div>
+            <details class="coordinate-editor">
+              <summary>
+                <span>顶点坐标</span>
+                <span class="summary-meta" id="vertexCount">0 个顶点</span>
+              </summary>
+              <textarea
+                id="pointInput"
+                spellcheck="false"
+                aria-label="多边形顶点坐标，每行 x, y"
+              ></textarea>
+              <div class="editor-foot">
+                <span>每行一个点：<code>x, y</code></span>
+                <button class="text-button" id="applyPoints" type="button">应用坐标</button>
+              </div>
+              <p class="inline-error" id="inputError" role="alert"></p>
+            </details>
+          </section>
+
+          <section class="panel-section distance-section">
+            <div class="section-heading compact">
+              <span class="section-index">02</span>
+              <div>
+                <h2>内缩距离</h2>
+                <p>边界沿内法线匀速移动</p>
+              </div>
+            </div>
+            <div class="distance-readout">
+              <label for="distanceInput">d</label>
+              <input
+                id="distanceInput"
+                type="number"
+                min="0"
+                step="0.1"
+                value="75"
+                aria-label="内缩距离"
+              />
+              <span class="distance-unit">u</span>
+            </div>
+            <input
+              id="distanceSlider"
+              class="range range-primary"
+              type="range"
+              min="0"
+              max="200"
+              step="0.1"
+              value="75"
+              aria-label="拖动内缩距离"
+            />
+            <div class="range-labels">
+              <span>0</span>
+              <span id="distanceMaxLabel">200</span>
+            </div>
+            <div class="playback">
+              <button class="icon-button primary" id="playButton" type="button" aria-label="播放">
+                <span class="icon-play" aria-hidden="true"></span>
+                <span id="playLabel">播放</span>
+              </button>
+              <button class="icon-button" id="prevEvent" type="button" aria-label="上一事件">
+                <span aria-hidden="true">‹</span>
+              </button>
+              <button class="icon-button" id="nextEvent" type="button" aria-label="下一事件">
+                <span aria-hidden="true">›</span>
+              </button>
+              <button class="icon-button reset" id="resetPlayback" type="button" aria-label="重置">
+                <span aria-hidden="true">↺</span>
+              </button>
+            </div>
+            <label class="toggle-row">
+              <input id="stopAtEvents" type="checkbox" checked />
+              <span class="switch" aria-hidden="true"></span>
+              <span>每个事件自动暂停</span>
+            </label>
+          </section>
+
+          <section class="panel-section tolerance-section">
+            <div class="section-heading compact">
+              <span class="section-index">03</span>
+              <div>
+                <h2>容差策略</h2>
+                <p>显式长度阈值，不使用像素腐蚀</p>
+              </div>
+            </div>
+            <div class="tolerance-row">
+              <label for="toleranceInput">τ</label>
+              <input
+                id="toleranceInput"
+                type="number"
+                min="0.00000001"
+                max="0.01"
+                step="0.000001"
+                value="0.00001"
+                aria-label="几何容差"
+              />
+              <span>世界单位</span>
+            </div>
+            <p class="tolerance-note" id="toleranceNote"></p>
+            <div class="tolerance-facts">
+              <span><b id="collinearRemoved">0</b> 个共线点被合并</span>
+              <span><b id="timeTolerance">1e-8</b> 事件时间窗</span>
+            </div>
+          </section>
+        </aside>
+
+        <section class="stage">
+          <div class="stage-toolbar">
+            <div class="stage-title">
+              <span class="eyebrow">WAVEFRONT VIEW</span>
+              <h1 id="shapeTitle">窄颈凹形</h1>
+            </div>
+            <div class="metric-strip">
+              <div class="metric">
+                <span>分量</span>
+                <strong id="componentMetric">1</strong>
+              </div>
+              <div class="metric">
+                <span>偏移面积</span>
+                <strong id="areaMetric">0</strong>
+              </div>
+              <div class="metric">
+                <span>自交</span>
+                <strong id="intersectionMetric" class="ok">0</strong>
+              </div>
+              <div class="metric">
+                <span>当前事件</span>
+                <strong id="eventMetric">0 / 0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="canvas-shell">
+            <div class="canvas-ruler ruler-top" aria-hidden="true">
+              <span>0</span><span>200</span><span>400</span><span>600</span><span>800</span>
+            </div>
+            <div class="canvas-ruler ruler-left" aria-hidden="true">
+              <span>600</span><span>450</span><span>300</span><span>150</span><span>0</span>
+            </div>
+            <svg id="scene" role="img" aria-label="多边形内缩轮廓与直骨架视图">
+              <defs>
+                <pattern id="gridMinor" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" class="grid-minor" />
+                </pattern>
+                <pattern id="gridMajor" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <rect width="100" height="100" fill="url(#gridMinor)" />
+                  <path d="M 100 0 L 0 0 0 100" class="grid-major" />
+                </pattern>
+                <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="8" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <rect id="gridRect" class="grid-fill" />
+              <g id="worldGroup">
+                <g id="skeletonLayer"></g>
+                <g id="originalLayer"></g>
+                <g id="offsetLayer"></g>
+                <g id="eventLayer"></g>
+                <g id="handleLayer"></g>
+              </g>
+            </svg>
+            <div class="canvas-badge">
+              <span id="distanceBadge">d = 75.0</span>
+              <i></i>
+              <span id="timeBadge">t = 75.0</span>
+            </div>
+            <div class="canvas-hint" id="canvasHint">拖动顶点可直接编辑形状</div>
+          </div>
+
+          <div class="stage-footer">
+            <div class="legend">
+              <span><i class="legend-original"></i>原始边界</span>
+              <span><i class="legend-offset"></i>偏移轮廓</span>
+              <span><i class="legend-skeleton"></i>直骨架</span>
+              <span><i class="legend-event"></i>事件点</span>
+            </div>
+            <div class="component-strip" id="componentStrip"></div>
+          </div>
+        </section>
+
+        <aside class="panel queue-panel">
+          <div class="queue-head">
+            <div>
+              <span class="eyebrow">EVENT STREAM</span>
+              <h2>事件队列</h2>
+            </div>
+            <span class="queue-count" id="queueCount">0 组</span>
+          </div>
+          <div class="queue-summary">
+            <div>
+              <span>分裂</span>
+              <strong id="splitCount">0</strong>
+            </div>
+            <div>
+              <span>边消失</span>
+              <strong id="collapseCount">0</strong>
+            </div>
+            <div>
+              <span>最大同刻</span>
+              <strong id="maxSimultaneous">0</strong>
+            </div>
+          </div>
+          <div class="queue-progress">
+            <div class="queue-progress-head">
+              <span id="queueStatus">等待事件</span>
+              <span id="queueTime">t = 0.00</span>
+            </div>
+            <div class="progress-track"><i id="queueProgressFill"></i></div>
+          </div>
+          <div class="event-list" id="eventList" aria-live="polite"></div>
+          <div class="queue-note">
+            <span class="queue-note-mark">τ</span>
+            <p id="queueNote">
+              同刻事件按时间容差合并；每个事件应用后重新构建波前拓扑。
+            </p>
+          </div>
+        </aside>
+      </main>
+    </div>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
