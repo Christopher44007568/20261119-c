@@ -1,0 +1,12 @@
+{
+  "name": "homogeneous-clip-visualizer",
+  "version": "1.0.0",
+  "description": "透视除法前对六个视锥平面做齐次裁剪的交互式可视化器",
+  "private": true,
+  "scripts": {
+    "test": "node tests/run-all.js",
+    "serve": "node -e \"const http=require('http'),fs=require('fs'),path=require('path');const root=process.cwd();const types={'.html':'text/html','.js':'text/javascript','.css':'text/css'};http.createServer((q,r)=>{let p=path.join(root,q.url==='/'?'index.html':q.url);fs.readFile(p,(e,d)=>{if(e){r.statusCode=404;return r.end('404');}r.setHeader('Content-Type',types[path.extname(p)]||'text/plain');r.end(d);});}).listen(8123,()=>console.log('http://localhost:8123'));\""
+  },
+  "keywords": ["clipping", "homogeneous", "frustum", "graphics", "sutherland-hodgman"],
+  "license": "MIT"
+}

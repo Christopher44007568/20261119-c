@@ -1,0 +1,157 @@
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #74c0fc;
+  --good: #51cf66;
+  --bad: #ff6b6b;
+  --warn: #ffd43b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 16px 20px 32px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 13px;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+h1 { font-size: 20px; margin: 0; }
+h1 .sub { font-size: 13px; color: var(--muted); font-weight: normal; }
+h2 { font-size: 14px; margin: 0 0 8px; color: var(--accent); }
+
+.status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-family: monospace;
+  font-size: 12px;
+}
+.status.ok { background: rgba(81, 207, 102, 0.15); color: var(--good); border: 1px solid rgba(81,207,102,0.4); }
+.status.bad { background: rgba(255, 107, 107, 0.15); color: var(--bad); border: 1px solid rgba(255,107,107,0.4); }
+
+.pipeline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-family: monospace;
+  font-size: 12px;
+}
+.stage { color: var(--muted); white-space: nowrap; }
+.stage.hot { color: var(--warn); font-weight: bold; }
+.arrow { color: var(--accent); }
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.axis { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); }
+.axis input[type="number"] { width: 70px; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px; padding: 2px 4px; }
+
+button {
+  background: #21262d;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+button:hover { border-color: var(--accent); }
+button.active { background: rgba(255, 212, 59, 0.18); border-color: var(--warn); color: var(--warn); }
+button.danger { border-color: rgba(255,107,107,0.5); }
+button.danger:hover { background: rgba(255,107,107,0.15); }
+
+input[type="range"] { width: 110px; accent-color: var(--accent); }
+input[type="checkbox"] { accent-color: var(--accent); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+.panel.wide { grid-column: span 2; }
+
+canvas {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  max-width: 100%;
+}
+
+.hint { color: var(--muted); margin: 6px 0 0; font-size: 11px; line-height: 1.5; }
+.warn-text { color: var(--warn); }
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: monospace;
+  font-size: 11.5px;
+}
+.table-wrap { max-height: 260px; overflow: auto; }
+table.data th, table.data td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  white-space: nowrap;
+}
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data th { color: var(--accent); font-weight: 600; }
+tr.warn td { background: rgba(255, 212, 59, 0.12); color: var(--warn); }
+.muted { color: var(--muted); text-align: center !important; }
+.gen { color: var(--warn); }
+.orig { color: var(--good); }
+
+footer {
+  margin-top: 16px;
+  padding: 10px 12px;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-family: monospace;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: 1fr; }
+  .panel.wide { grid-column: span 1; }
+}

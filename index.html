@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>齐次裁剪可视化器</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>齐次裁剪可视化器 <span class="sub">透视除法之前裁剪到六个视锥平面</span></h1>
+    <div id="pipeStatus" class="status ok"></div>
+  </header>
+
+  <section class="pipeline">
+    <span class="stage">① 眼睛空间顶点</span><span class="arrow">→</span>
+    <span class="stage">② 投影（得到 x,y,z,w，不除 w）</span><span class="arrow">→</span>
+    <span class="stage hot">③ 六平面齐次裁剪 + 属性沿边插值</span><span class="arrow">→</span>
+    <span class="stage">④ 透视除法 /w</span><span class="arrow">→</span>
+    <span class="stage">⑤ 视口映射 + 光栅化</span>
+  </section>
+
+  <section class="controls">
+    <div class="group">
+      <strong>测试预设：</strong>
+      <button class="preset" data-preset="inside">视锥内</button>
+      <button class="preset" data-preset="nearCross">穿过近平面</button>
+      <button class="preset" data-preset="nearZeroW">w≈0</button>
+      <button class="preset" data-preset="behindCamera">w&lt;0 越相机</button>
+      <button class="preset" data-preset="multiPlane">跨多平面</button>
+      <button class="preset danger" data-preset="rejectedNear">拒绝·近前</button>
+      <button class="preset danger" data-preset="rejectedBehind">拒绝·机后</button>
+    </div>
+    <div class="group">
+      <strong>选中顶点：</strong>
+      <button class="vertex-pick" data-idx="0">V0</button>
+      <button class="vertex-pick" data-idx="1">V1</button>
+      <button class="vertex-pick" data-idx="2">V2</button>
+      <label class="axis">X <input type="range" id="sl-x" min="-20" max="20" step="0.05"><input type="number" id="num-x" step="0.1" disabled></label>
+      <label class="axis">Y <input type="range" id="sl-y" min="-20" max="20" step="0.05"><input type="number" id="num-y" step="0.1" disabled></label>
+      <label class="axis">Z <input type="range" id="sl-z" min="-40" max="8" step="0.05"><input type="number" id="num-z" step="0.1" disabled></label>
+    </div>
+    <div class="group">
+      <label><input type="checkbox" id="chk-correct" checked> 透视正确属性插值 (1/w)</label>
+      <label><input type="checkbox" id="chk-checker"> UV 棋盘格</label>
+      <label><input type="checkbox" id="chk-sweep"> 近平面扫掠动画（选中顶点沿 Z 往返）</label>
+    </div>
+  </section>
+
+  <main class="grid">
+    <div class="panel wide">
+      <h2>裁剪空间几何 · 眼睛空间 3D 视图</h2>
+      <canvas id="view3d" width="760" height="380"></canvas>
+      <p class="hint">虚线灰三角＝裁剪前原始几何；蓝色多边形＝齐次裁剪结果（反投影显示）；黄点 I＝裁剪交点。拖拽旋转，滚轮缩放。</p>
+    </div>
+    <div class="panel">
+      <h2>最终屏幕图像</h2>
+      <canvas id="screenView" width="360" height="360"></canvas>
+      <p class="hint">仅在裁剪完成后做透视除法；取消勾选 1/w 可对比错误的屏幕空间线性插值。</p>
+    </div>
+    <div class="panel">
+      <h2>俯视图 X-Z（可拖拽顶点）</h2>
+      <canvas id="topView" width="360" height="360"></canvas>
+      <p class="hint">向下为 −Z（场景深处），橙色虚线为近平面 z=-2；直接拖动顶点穿过它。</p>
+    </div>
+
+    <div class="panel">
+      <h2>输入顶点 · 裁剪空间（除法前）</h2>
+      <table id="inputTable" class="data"></table>
+      <p class="hint warn-text">高亮行表示 w 接近 0 或为负：裁剪器从不先除以 w。</p>
+    </div>
+    <div class="panel">
+      <h2>六平面裁剪过程</h2>
+      <table id="planeStats" class="data"></table>
+    </div>
+    <div class="panel">
+      <h2>面积变化</h2>
+      <table id="areaStats" class="data"></table>
+    </div>
+    <div class="panel wide">
+      <h2>裁剪多边形输出顶点</h2>
+      <div class="table-wrap">
+        <table id="vertexTable" class="data"></table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    齐次平面：w+z≥0（近）· w−z≥0（远）· w±x≥0（左右）· w±y≥0（上下）。
+    交点参数 t 由齐次距离 d(v) 线性求出，属性 (r,g,b,u,v) 用同一 t 在裁剪边上插值。
+  </footer>
+
+  <script src="js/clip.js"></script>
+  <script src="js/mat.js"></script>
+  <script src="js/raster.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/views.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
