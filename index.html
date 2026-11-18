@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#081116">
+  <title>薄膜干涉 · 光谱着色实验</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="薄膜干涉实验首页">
+        <span class="brand-mark" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </span>
+        <span class="brand-copy">
+          <span class="overline">OPTICAL LAB · THIN FILM 03</span>
+          <span class="brand-title">薄膜干涉光谱着色</span>
+        </span>
+      </a>
+      <div class="topbar-meta">
+        <span class="solver-badge">Fresnel–Airy 多层求解</span>
+        <span class="live-badge"><i></i>实时计算</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="control-rail" aria-label="实验参数">
+        <div class="rail-heading">
+          <span class="section-index">01</span>
+          <div>
+            <p class="eyebrow">INPUT</p>
+            <h2>观察条件</h2>
+          </div>
+        </div>
+
+        <section class="control-block">
+          <div class="control-label">
+            <label for="thicknessRange">薄膜厚度</label>
+            <span class="symbol">d</span>
+          </div>
+          <div class="value-entry">
+            <input id="thicknessNumber" type="number" min="0" max="1200" step="1" value="320" inputmode="numeric" aria-label="薄膜厚度，纳米">
+            <span>nm</span>
+          </div>
+          <input class="range" id="thicknessRange" type="range" min="0" max="1200" step="1" value="320">
+          <div class="range-scale"><span>0</span><span>600</span><span>1200</span></div>
+        </section>
+
+        <section class="control-block">
+          <div class="control-label">
+            <label for="indexRange">薄膜折射率</label>
+            <span class="symbol">n₁</span>
+          </div>
+          <div class="value-entry">
+            <input id="indexNumber" type="number" min="1" max="2.5" step="0.01" value="2.00" inputmode="decimal" aria-label="薄膜折射率">
+            <span>air → film</span>
+          </div>
+          <input class="range" id="indexRange" type="range" min="1" max="2.5" step="0.01" value="2.00">
+          <div class="range-scale"><span>1.00</span><span>1.75</span><span>2.50</span></div>
+        </section>
+
+        <section class="control-block">
+          <div class="control-label">
+            <label for="angleRange">观察角度</label>
+            <span class="symbol">θ₀</span>
+          </div>
+          <div class="value-entry">
+            <input id="angleNumber" type="number" min="0" max="85" step="0.1" value="25" inputmode="decimal" aria-label="观察角度，度">
+            <span>deg · 空气侧</span>
+          </div>
+          <input class="range" id="angleRange" type="range" min="0" max="85" step="0.1" value="25">
+          <div class="range-scale"><span>法线 0°</span><span>45°</span><span>85°</span></div>
+        </section>
+
+        <section class="stack-card" aria-label="三层介质堆栈">
+          <div class="stack-title"><span>LAYER STACK</span><span>n · d</span></div>
+          <div class="layer-row">
+            <span class="layer-swatch air"></span>
+            <span class="layer-name">空气 <small>n₀</small></span>
+            <strong>1.000</strong>
+          </div>
+          <div class="layer-row film-row">
+            <span class="layer-swatch film"></span>
+            <span class="layer-name">薄膜 <small>n₁</small></span>
+            <strong id="stackFilmIndex">2.000</strong>
+          </div>
+          <div class="layer-row">
+            <span class="layer-swatch substrate"></span>
+            <span class="layer-name">玻璃基底 <small>n₂</small></span>
+            <strong>1.520</strong>
+          </div>
+          <p class="stack-note">非吸收介质 · 膜内多次反射相干叠加</p>
+        </section>
+
+        <div class="preset-block">
+          <p class="control-label"><span>快速设定</span><span class="symbol">PRESETS</span></p>
+          <div class="preset-grid">
+            <button type="button" class="preset" data-preset="mgf2"><b>MgF₂</b><span>100 nm</span></button>
+            <button type="button" class="preset" data-preset="soap"><b>肥皂膜</b><span>420 nm</span></button>
+            <button type="button" class="preset" data-preset="zero"><b>零厚度</b><span>d = 0</span></button>
+            <button type="button" class="preset" data-preset="normal"><b>法线</b><span>θ = 0°</span></button>
+          </div>
+        </div>
+
+        <section class="sampling-select">
+          <label for="sampleSelect">波长采样密度</label>
+          <select id="sampleSelect">
+            <option value="16">16 点 · 26.7 nm</option>
+            <option value="31">31 点 · 13.3 nm</option>
+            <option value="61">61 点 · 6.7 nm</option>
+            <option value="121">121 点 · 3.3 nm</option>
+            <option value="241" selected>241 点 · 1.7 nm</option>
+            <option value="481">481 点 · 0.83 nm</option>
+          </select>
+          <p>当前颜色由所选采样积分；误差基准为 0.33 nm。</p>
+        </section>
+      </aside>
+
+      <div class="content">
+        <section class="top-grid">
+          <article class="card color-card">
+            <header class="card-head">
+              <div>
+                <p class="eyebrow">SPECTRAL COLOR</p>
+                <h2>反射色</h2>
+              </div>
+              <span class="hex-pill" id="hexPill">#000000</span>
+            </header>
+            <div class="sample-stage">
+              <div class="stage-grid" aria-hidden="true"></div>
+              <div class="incidence-line" aria-hidden="true"><i></i></div>
+              <div class="film-orbit" aria-hidden="true"></div>
+              <div class="film-disc" id="filmDisc"></div>
+              <div class="film-gloss" aria-hidden="true"></div>
+              <span class="angle-tag" id="angleTag">25.0° 观察</span>
+              <span class="stage-caption">空气 / 薄膜 / 玻璃 · 固定曝光</span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric">
+                <span>可见光平均反射率</span>
+                <strong id="avgMetric">—</strong>
+              </div>
+              <div class="metric">
+                <span>光度亮度 Y</span>
+                <strong id="luminanceMetric">—</strong>
+              </div>
+              <div class="metric">
+                <span>当前主峰</span>
+                <strong id="peakMetric">—</strong>
+              </div>
+            </div>
+            <div class="peak-strip" id="peakStrip" aria-label="干涉峰位置"></div>
+          </article>
+
+          <article class="card spectrum-card">
+            <header class="card-head">
+              <div>
+                <p class="eyebrow">REFLECTANCE SPECTRUM</p>
+                <h2>反射谱与峰迁移</h2>
+              </div>
+              <div class="chart-legend">
+                <span><i class="legend-current"></i>当前角度</span>
+                <span><i class="legend-normal"></i>法线入射</span>
+              </div>
+            </header>
+            <div class="chart-wrap spectrum-wrap">
+              <canvas id="spectrumCanvas" aria-label="波长与反射率关系图"></canvas>
+              <div class="chart-tooltip" id="spectrumTooltip" hidden></div>
+            </div>
+            <footer class="chart-foot">
+              <span>380–780 nm · 非偏振光</span>
+              <span id="shiftSummary">—</span>
+            </footer>
+          </article>
+        </section>
+
+        <section class="lower-grid">
+          <article class="card heatmap-card">
+            <header class="card-head">
+              <div>
+                <p class="eyebrow">ANGLE × WAVELENGTH</p>
+                <h2>干涉峰如何迁移</h2>
+              </div>
+              <span class="pixel-note">逐像素 Fresnel 计算</span>
+            </header>
+            <div class="chart-wrap heatmap-wrap">
+              <canvas id="heatmapCanvas" aria-label="不同观察角度的反射光谱热图"></canvas>
+            </div>
+            <footer class="chart-foot">
+              <span>横虚线：当前角 · 亮点：局部峰</span>
+              <div class="heat-key"><span>0%</span><i></i><span>100%</span></div>
+            </footer>
+          </article>
+
+          <article class="card checks-card">
+            <header class="card-head">
+              <div>
+                <p class="eyebrow">NUMERICAL GUARDRAILS</p>
+                <h2>边界体检</h2>
+              </div>
+              <span class="pass-pill" id="passPill">—</span>
+            </header>
+            <div class="check-list" id="checkList"></div>
+            <button class="rerun-button" id="rerunChecks" type="button">
+              <span>重新扫描</span><span aria-hidden="true">↻</span>
+            </button>
+            <p class="check-note">扫描可见光谱与 0–85° 入射角；颜色差按 sRGB 通道最大值统计。</p>
+          </article>
+        </section>
+
+        <section class="card sampling-card">
+          <header class="card-head">
+            <div>
+              <p class="eyebrow">INTEGRATION ERROR</p>
+              <h2>波长采样误差</h2>
+            </div>
+            <span class="reference-pill">参考：0.33 nm · ΔE₇₆</span>
+          </header>
+          <div class="sampling-layout">
+            <div class="sampling-summary">
+              <p>同一反射谱用不同密度做梯形积分。采样过疏会漏掉窄峰，导致显示色偏移；增加采样后应稳定收敛。</p>
+              <div class="reference-colors">
+                <div>
+                  <span class="mini-swatch" id="sampleSwatch"></span>
+                  <small>当前采样色</small>
+                </div>
+                <div>
+                  <span class="mini-swatch" id="referenceSwatch"></span>
+                  <small>0.33 nm 参考色</small>
+                </div>
+              </div>
+            </div>
+            <div class="sampling-bars" id="samplingBars"></div>
+          </div>
+        </section>
+
+        <footer class="math-footer">
+          <div>
+            <span class="math-label">AIRY REFLECTION</span>
+            <code>r = (r₀₁ + r₁₂e<sup>2iβ</sup>) / (1 + r₀₁r₁₂e<sup>2iβ</sup>)</code>
+          </div>
+          <div>
+            <span class="math-label">PHASE THICKNESS</span>
+            <code>β = 2π n₁d cosθ₁ / λ</code>
+          </div>
+          <p>波长决定 Snell 角、Fresnel 系数与光程差，而不是用角度渐变生成颜色。</p>
+        </footer>
+      </div>
+    </main>
+  </div>
+  <script src="physics.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
