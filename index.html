@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070a10" />
+    <title>Refraction in Layers</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23070a10'/%3E%3Cpath d='M8 22 16 7l8 15H8Z' fill='none' stroke='%239ef4e3' stroke-width='1.2'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="scene" aria-label="Real-time refractive glass scene"></canvas>
+
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Optical Matter</span>
+        <span class="brand-index">Study 03</span>
+      </div>
+      <div class="system-status">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span>Live trace</span>
+        <span class="status-separator"></span>
+        <span id="fps">60 fps</span>
+      </div>
+    </header>
+
+    <main class="masthead">
+      <p class="eyebrow">Transmission / dispersion / depth</p>
+      <h1>Refraction<br /><em>in layers</em></h1>
+      <p class="intro">
+        Three vitreous plates, three optical paths. Light bends at every boundary;
+        the thickness in between writes the color.
+      </p>
+    </main>
+
+    <aside class="telemetry" aria-label="Trace telemetry">
+      <div class="telemetry-head">
+        <span>Trace state</span>
+        <span class="telemetry-id">IOR 1.460</span>
+      </div>
+      <dl>
+        <div><dt>Max recursion</dt><dd id="trace-depth">06</dd></div>
+        <div><dt>Active plates</dt><dd id="active-plates">03</dd></div>
+        <div><dt>TIR guard</dt><dd class="accent">armed</dd></div>
+        <div><dt>Absorption</dt><dd id="absorb-value">1.00×</dd></div>
+        <div><dt>Cap contribution</dt><dd class="warm">additive</dd></div>
+        <div><dt>Zero thickness</dt><dd>empty path</dd></div>
+      </dl>
+    </aside>
+
+    <section class="controls" aria-label="Glass specimen controls">
+      <div class="controls-title">
+        <span>Specimens</span>
+        <span class="controls-note">drag scene to orbit</span>
+      </div>
+      <div class="specimens" id="specimens"></div>
+      <div class="controls-actions">
+        <label class="absorption-control" for="absorption">
+          <span>Absorption</span>
+          <input id="absorption" type="range" min="0" max="2" step="0.01" value="1" />
+          <output id="absorption-output" for="absorption">1.00×</output>
+        </label>
+        <button id="reset-view" class="reset-button" type="button">
+          <span>Reset view</span>
+          <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+    </section>
+
+    <div class="coordinate" aria-hidden="true">
+      <span>X</span><span>Y</span><span>Z</span>
+    </div>
+
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
