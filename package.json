@@ -1,0 +1,11 @@
+{
+  "name": "rigid-fold-previewer",
+  "version": "1.0.0",
+  "description": "三维折纸刚性运动预览器：刚体面板变换、闭环约束残差与面板相交检测",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/folding.test.js tests/scene.test.js tests/controller.test.js",
+    "serve": "node server.js"
+  },
+  "license": "MIT"
+}

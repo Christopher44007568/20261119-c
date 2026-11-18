@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>三维折纸刚性运动预览器</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="canvas-wrap">
+        <canvas id="viewport"></canvas>
+        <div id="statusBanner" class="status ok">初始化中…</div>
+        <div class="legend">
+          <span><i class="swatch mountain"></i>山折 M</span>
+          <span><i class="swatch valley"></i>谷折 V</span>
+          <span><i class="swatch hinge"></i>铰链轴</span>
+          <span><i class="swatch normal"></i>面板法线</span>
+          <span><i class="swatch intersect"></i>相交标红</span>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <h1>折纸刚性运动预览器</h1>
+        <p class="hint">面板为刚体，仅绕铰链折痕旋转；不做弹性网格拉伸。</p>
+
+        <label class="field">
+          折痕图
+          <select id="patternSelect">
+            <option value="strip">四折带（无环路径图）</option>
+            <option value="loop">四折汇聚（闭环约束）</option>
+          </select>
+        </label>
+
+        <div class="toolbar">
+          <button id="resetBtn" type="button">复位到平态</button>
+          <label class="check">
+            <input id="normalToggle" type="checkbox" checked />
+            显示面板法线
+          </label>
+        </div>
+
+        <h2>驱动折角</h2>
+        <div id="foldControls" class="fold-controls"></div>
+
+        <h2>闭环约束残差</h2>
+        <table class="residual">
+          <thead>
+            <tr><th>闭环折痕</th><th>位置残差</th><th>角度残差</th></tr>
+          </thead>
+          <tbody id="closureBody"></tbody>
+        </table>
+
+        <h2>刚体检验</h2>
+        <dl class="metrics">
+          <dt>最大边长相对变化</dt>
+          <dd id="lengthDelta">—</dd>
+          <dt>相交面板</dt>
+          <dd id="intersectionList">—</dd>
+        </dl>
+
+        <h2>自定义折痕图 JSON</h2>
+        <textarea id="jsonInput" rows="6" spellcheck="false"
+          placeholder='{"vertices":[[0,0],[1,0]],"panels":[{"id":"P0","vertices":[0,1,2]}],"folds":[{"id":"F0","panels":["P0","P1"],"edge":[0,1],"assignment":"M"}]}'></textarea>
+        <button id="loadJsonBtn" type="button" class="wide">载入 JSON</button>
+      </aside>
+    </main>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
