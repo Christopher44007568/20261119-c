@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>各向异性采样比较器 — 椭圆足迹滤波</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>投影纹理各向异性采样比较器</h1>
+  <p>由屏幕导数计算纹理足迹椭圆，用可控采样数近似椭圆滤波（CPU 软件实现，非驱动 AF 开关）。点击任意结果图设置探针像素。</p>
+</header>
+
+<div id="layout">
+  <div id="views">
+    <figure>
+      <canvas id="viewPoint" width="360" height="240"></canvas>
+      <figcaption>点采样（bilinear, LOD 0）<span class="stat" id="timePoint"></span></figcaption>
+    </figure>
+    <figure>
+      <canvas id="viewIso" width="360" height="240"></canvas>
+      <figcaption>各向同性 Mip（trilinear）<span class="stat" id="timeIso"></span></figcaption>
+    </figure>
+    <figure>
+      <canvas id="viewEllipse" width="360" height="240"></canvas>
+      <figcaption>椭圆足迹滤波（本实现）<span class="stat" id="timeEllipse"></span></figcaption>
+    </figure>
+    <figure>
+      <canvas id="viewRef" width="360" height="240"></canvas>
+      <figcaption>参考（256 次超采样）<span class="stat" id="timeRef"></span></figcaption>
+    </figure>
+  </div>
+
+  <div id="side">
+    <canvas id="footprintView" width="360" height="360"></canvas>
+    <div id="probeInfo"></div>
+  </div>
+</div>
+
+<div id="controls">
+  <label>纹理
+    <select id="ctlTexture">
+      <option value="checker">高频棋盘</option>
+      <option value="stripes">斜向条纹</option>
+    </select>
+  </label>
+  <label>倾角 θ <span id="lblTilt"></span>
+    <input type="range" id="ctlTilt" min="0" max="80" value="62" step="1">
+  </label>
+  <label>缩小比例 <span id="lblScale"></span>
+    <input type="range" id="ctlScale" min="0" max="100" value="50" step="1">
+  </label>
+  <label>采样预算 N <span id="lblBudget"></span>
+    <input type="range" id="ctlBudget" min="1" max="64" value="16" step="1">
+  </label>
+  <label>权重
+    <select id="ctlWeight">
+      <option value="box">均匀（box）</option>
+      <option value="gauss">高斯</option>
+    </select>
+  </label>
+  <label>
+    <input type="checkbox" id="ctlLodComp" checked>
+    超预算时提升 LOD 补偿（模糊换抗混叠）
+  </label>
+</div>
+
+<table id="metrics">
+  <thead>
+    <tr><th>方法</th><th>耗时 (ms)</th><th>RMSE vs 参考</th><th>说明</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>点采样</td><td id="mTimePoint"></td><td id="mRmsePoint"></td><td>无过滤，严重走样/闪烁</td></tr>
+    <tr><td>各向同性 Mip</td><td id="mTimeIso"></td><td id="mRmseIso"></td><td>按最长轴选层，沿短轴方向过度模糊</td></tr>
+    <tr><td>椭圆足迹滤波</td><td id="mTimeEllipse"></td><td id="mRmseEllipse"></td><td id="mNoteEllipse"></td></tr>
+  </tbody>
+</table>
+
+<script src="texture.js"></script>
+<script src="sampling.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

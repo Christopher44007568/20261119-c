@@ -1,0 +1,31 @@
+* { box-sizing: border-box; }
+body {
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  margin: 0; padding: 16px; background: #1b1e24; color: #dde3ec;
+}
+header h1 { font-size: 20px; margin: 0 0 4px; }
+header p { margin: 0 0 14px; color: #9aa4b5; font-size: 13px; }
+#layout { display: flex; gap: 16px; flex-wrap: wrap; }
+#views { display: grid; grid-template-columns: repeat(2, 360px); gap: 10px; }
+figure { margin: 0; }
+canvas { background: #000; display: block; border: 1px solid #333a47; cursor: crosshair; }
+figcaption { font-size: 12px; padding: 4px 2px; color: #aeb8c8; }
+.stat { float: right; color: #6fd3a7; font-variant-numeric: tabular-nums; }
+#side { width: 360px; }
+#probeInfo {
+  font-size: 12px; line-height: 1.6; margin-top: 8px; color: #c6cfdd;
+  background: #232833; border: 1px solid #333c4b; border-radius: 6px; padding: 8px 10px;
+  white-space: pre-wrap; font-family: Consolas, monospace;
+}
+#controls {
+  display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
+  margin: 16px 0; padding: 10px 14px; background: #232833;
+  border: 1px solid #333c4b; border-radius: 6px; font-size: 13px;
+}
+#controls label { display: flex; flex-direction: column; gap: 4px; }
+#controls label:last-child { flex-direction: row; align-items: center; }
+#controls input[type=range] { width: 160px; }
+#metrics { border-collapse: collapse; font-size: 13px; width: 100%; max-width: 1100px; }
+#metrics th, #metrics td { border: 1px solid #333c4b; padding: 6px 10px; text-align: left; }
+#metrics th { background: #232833; }
+.warn { color: #f0b35e; }
