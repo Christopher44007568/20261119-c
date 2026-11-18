@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="交互式 ARAP 二维网格编辑器：局部旋转与全局位置交替求解。"
+    />
+    <title>ARAP Mesh Studio</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23101815'/%3E%3Cpath d='M16 5l11 11-11 11L5 16z' fill='%2313b58c'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <div>
+            <p class="eyebrow">GEOMETRY LAB / 02</p>
+            <h1>ARAP Mesh Studio</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <span class="solver-status" id="solverStatus">
+            <span class="status-dot"></span>
+            <span id="solverStatusText">等待拖动</span>
+          </span>
+          <button class="button button-quiet" id="exportReport" type="button">
+            导出报告
+          </button>
+          <button class="button button-primary" id="exportObj" type="button">
+            导出 OBJ
+          </button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <aside class="sidebar panel">
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">01</span>
+              <div>
+                <h2>测试网格</h2>
+                <p>三类拓扑压力案例</p>
+              </div>
+            </div>
+            <div class="preset-list" id="presetList">
+              <button class="preset-card" data-preset="strip" type="button">
+                <span class="preset-icon strip-icon"></span>
+                <span><strong>长条弯折</strong><small>高长宽比 · 大曲率</small></span>
+              </button>
+              <button class="preset-card" data-preset="perforated" type="button">
+                <span class="preset-icon hole-icon"></span>
+                <span><strong>带孔薄片</strong><small>三孔 · 边界保持</small></span>
+              </button>
+              <button class="preset-card" data-preset="disconnected" type="button">
+                <span class="preset-icon split-icon"></span>
+                <span><strong>不连通网格</strong><small>约束缺失诊断</small></span>
+              </button>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">02</span>
+              <div>
+                <h2>编辑工具</h2>
+                <p>先固定，再拖动控制点</p>
+              </div>
+            </div>
+            <div class="segmented" role="group" aria-label="编辑工具">
+              <button class="segment active" data-tool="drag" type="button">
+                拖动控制点
+              </button>
+              <button class="segment" data-tool="pin" type="button">
+                固定顶点
+              </button>
+            </div>
+            <div class="tool-note" id="toolNote">
+              拖动橙色菱形；松手后逐次执行局部旋转与全局位置求解。
+            </div>
+          </section>
+
+          <section class="panel-section solver-settings">
+            <div class="section-heading">
+              <span class="section-index">03</span>
+              <div>
+                <h2>求解参数</h2>
+                <p>硬约束 · 均匀权重</p>
+              </div>
+            </div>
+            <label class="range-row" for="maxIterations">
+              <span>最大迭代 <output id="maxIterationsValue">60</output></span>
+              <input id="maxIterations" type="range" min="10" max="100" step="5" value="60" />
+            </label>
+            <label class="select-row" for="energyTolerance">
+              <span>能量阈值</span>
+              <select id="energyTolerance">
+                <option value="0.0001">1e-4</option>
+                <option value="0.00001" selected>1e-5</option>
+                <option value="0.0000001">1e-7</option>
+              </select>
+            </label>
+            <label class="select-row" for="rigidTolerance">
+              <span>残差阈值</span>
+              <select id="rigidTolerance">
+                <option value="0.01">1e-2</option>
+                <option value="0.001" selected>1e-3</option>
+                <option value="0.0001">1e-4</option>
+              </select>
+            </label>
+          </section>
+
+          <section class="panel-section component-panel">
+            <div class="section-heading compact">
+              <span class="section-index">04</span>
+              <div>
+                <h2>约束检查</h2>
+              </div>
+            </div>
+            <div class="component-report" id="componentReport"></div>
+          </section>
+        </aside>
+
+        <section class="workspace">
+          <div class="canvas-toolbar">
+            <div>
+              <p class="eyebrow" id="meshKind">PRESET / STRIP</p>
+              <h2 id="meshTitle">长条弯折</h2>
+              <p class="mesh-description" id="meshDescription"></p>
+            </div>
+            <div class="canvas-actions">
+              <button class="button button-quiet" id="resetMesh" type="button">重置</button>
+              <button class="button button-dark" id="runSolver" type="button">运行 ARAP</button>
+              <label class="toggle">
+                <input id="showLaplacian" type="checkbox" />
+                <span>叠加 Laplacian</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="viewport" id="viewport">
+            <canvas id="meshCanvas" aria-label="ARAP 网格编辑画布"></canvas>
+            <div class="viewport-hint" id="viewportHint">
+              <kbd>拖动</kbd> 橙色菱形控制点
+              <span>松手后开始迭代</span>
+            </div>
+            <div class="constraint-warning hidden" id="constraintWarning"></div>
+            <div class="legend">
+              <span><i class="legend-fixed"></i>固定顶点</span>
+              <span><i class="legend-control"></i>控制点</span>
+              <span><i class="legend-arap"></i>ARAP</span>
+              <span><i class="legend-lap"></i>Laplacian</span>
+            </div>
+          </div>
+        </section>
+
+        <aside class="inspector panel">
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">05</span>
+              <div>
+                <h2>实时诊断</h2>
+                <p id="iterationLabel">迭代 0 / 60</p>
+              </div>
+            </div>
+            <div class="metric-grid">
+              <article class="metric-card">
+                <span>ARAP 能量</span>
+                <strong id="metricEnergy">—</strong>
+                <small>全局目标函数</small>
+              </article>
+              <article class="metric-card accent">
+                <span>刚性残差 RMS</span>
+                <strong id="metricResidual">—</strong>
+                <small>局部旋转拟合误差</small>
+              </article>
+              <article class="metric-card">
+                <span>固定点漂移</span>
+                <strong id="metricDrift">0.00e+0</strong>
+                <small>必须保持为零</small>
+              </article>
+              <article class="metric-card">
+                <span>最大边伸长</span>
+                <strong id="metricStretch">—</strong>
+                <small>变形 / 原长</small>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel-section chart-section">
+            <div class="section-heading compact">
+              <span class="section-index">06</span>
+              <div>
+                <h2>逐次迭代</h2>
+                <p>能量与局部刚性残差</p>
+              </div>
+            </div>
+            <div class="chart-legend">
+              <span><i class="line-energy"></i>能量</span>
+              <span><i class="line-residual"></i>刚性残差</span>
+              <span class="chart-scale">log₁₀</span>
+            </div>
+            <canvas id="energyChart" aria-label="ARAP 收敛曲线"></canvas>
+          </section>
+
+          <section class="panel-section result-section">
+            <div class="section-heading compact">
+              <span class="section-index">07</span>
+              <div>
+                <h2>收敛记录</h2>
+              </div>
+            </div>
+            <div class="stop-card" id="stopCard">
+              <span class="stop-label">停止原因</span>
+              <strong id="stopReason">尚未运行</strong>
+              <p id="stopDetail">拖动控制点并松手后记录停止条件。</p>
+            </div>
+            <div class="comparison" id="comparison">
+              <div class="comparison-head">
+                <span>方法</span><span>能量</span><span>残差</span>
+              </div>
+              <div class="comparison-row">
+                <span class="method arap-method">ARAP</span>
+                <span id="compareArapEnergy">—</span>
+                <span id="compareArapResidual">—</span>
+              </div>
+              <div class="comparison-row">
+                <span class="method lap-method">Laplacian</span>
+                <span id="compareLapEnergy">—</span>
+                <span id="compareLapResidual">—</span>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
