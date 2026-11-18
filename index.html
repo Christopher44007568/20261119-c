@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080c10">
+    <title>Geodesic Heat Lab · 热方法测地距离</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="24" r="19" fill="none" stroke="currentColor" stroke-width="1"/>
+            <path d="M8 28c8-11 11 11 20 1 4-5 7-6 12-3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M12 21c7-7 10 8 17 0 4-4 7-4 10-1" fill="none" stroke="currentColor" stroke-width=".8" opacity=".5"/>
+            <circle cx="17" cy="29" r="2.6" fill="currentColor"/>
+          </svg>
+          <div>
+            <div class="eyebrow">DISCRETE DIFFERENTIAL GEOMETRY</div>
+            <h1>Geodesic <span>Heat Lab</span></h1>
+          </div>
+        </div>
+        <div class="topbar-meta">
+          <div class="meta-item">
+            <span class="meta-label">算子</span>
+            <span class="meta-value">Cotan Laplacian</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">求解器</span>
+            <span class="meta-value">Cholesky Prefactor</span>
+          </div>
+          <div class="live-badge"><i></i> INTERACTIVE</div>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel control-panel" aria-label="网格与源点控制">
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">01</span>
+              <h2>网格场景</h2>
+              <span class="section-note" id="meshVersion">v01</span>
+            </div>
+            <div class="mesh-presets" role="group" aria-label="选择网格">
+              <button class="preset active" data-preset="planar">
+                <span class="preset-glyph planar-glyph"><i></i></span>
+                <span>平面</span>
+              </button>
+              <button class="preset" data-preset="sphere">
+                <span class="preset-glyph sphere-glyph"><i></i></span>
+                <span>球面</span>
+              </button>
+              <button class="preset" data-preset="disconnected">
+                <span class="preset-glyph split-glyph"><i></i><b></b></span>
+                <span>断开双片</span>
+              </button>
+            </div>
+            <div class="range-row">
+              <label for="resolution">网格密度</label>
+              <output id="resolutionLabel">标准</output>
+            </div>
+            <input id="resolution" class="range" type="range" min="0" max="2" step="1" value="1">
+            <div class="scale-marks"><span>快速</span><span>标准</span><span>精细</span></div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">02</span>
+              <h2>测地端点</h2>
+            </div>
+            <div class="endpoint-row source-row">
+              <span class="endpoint-key"><i class="dot source-dot"></i>源点</span>
+              <span class="endpoint-value" id="sourceLabel">#--</span>
+              <button class="text-button" data-pick="source">重选</button>
+            </div>
+            <div class="endpoint-row target-row">
+              <span class="endpoint-key"><i class="dot target-dot"></i>目标</span>
+              <span class="endpoint-value" id="targetLabel">#--</span>
+              <button class="text-button" data-pick="target">重选</button>
+            </div>
+            <p class="hint"><span class="mouse-icon"></span>点击视口选取顶点 · 拖拽旋转 · 滚轮缩放</p>
+          </section>
+
+          <section class="panel-section status-section">
+            <div class="section-heading">
+              <span class="section-index">03</span>
+              <h2>连通性</h2>
+            </div>
+            <div class="connectivity-card" id="connectivityCard">
+              <div class="connectivity-top">
+                <span class="status-dot ok"></span>
+                <strong id="connectivityTitle">单连通分量</strong>
+                <span id="componentCount">1 / 1</span>
+              </div>
+              <div class="mini-progress"><i id="componentProgress"></i></div>
+              <p id="connectivityNote">所有顶点均可由源点到达。</p>
+            </div>
+          </section>
+
+          <section class="panel-section cache-section">
+            <div class="section-heading">
+              <span class="section-index">04</span>
+              <h2>预分解缓存</h2>
+            </div>
+            <div class="cache-state">
+              <span class="cache-icon"><i></i><i></i><i></i></span>
+              <div>
+                <strong id="cacheTitle">就绪</strong>
+                <p id="cacheNote">热核 + 2 个泊松系统</p>
+              </div>
+              <span class="reuse-pill" id="reusePill">×0</span>
+            </div>
+            <div class="cache-meta">
+              <span>网格变更时失效</span>
+              <span id="factorTime">-- ms</span>
+            </div>
+          </section>
+
+          <section class="panel-section options-section">
+            <label class="switch-row">
+              <span>等值带</span>
+              <input id="bandsToggle" type="checkbox" checked>
+              <i class="switch"></i>
+            </label>
+            <label class="switch-row">
+              <span>三角网格线</span>
+              <input id="wireToggle" type="checkbox">
+              <i class="switch"></i>
+            </label>
+          </section>
+        </aside>
+
+        <section class="viewport-shell" id="viewportShell">
+          <div class="scene-backdrop"></div>
+          <canvas id="glCanvas" aria-label="三角网格三维视图"></canvas>
+          <canvas id="overlayCanvas" aria-hidden="true"></canvas>
+          <div class="scene-top">
+            <div>
+              <div class="scene-kicker">SURFACE / <span id="sceneKind">PLANAR</span></div>
+              <h2 id="sceneTitle">平面三角网格</h2>
+              <p id="sceneSubtitle">32 × 22 cells · 759 vertices</p>
+            </div>
+            <div class="scene-actions">
+              <button id="resetView" aria-label="重置视角" title="重置视角">
+                <svg viewBox="0 0 24 24"><path d="M4 8V4h4M20 16v4h-4M4 4l6 6M20 20l-6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              </button>
+              <button id="toggleRotate" aria-label="自动旋转" title="自动旋转">
+                <svg viewBox="0 0 24 24"><path d="M20 6v5h-5M4 18v-5h5M19 11a7 7 0 0 0-12-4M5 13a7 7 0 0 0 12 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="scene-chip" id="sceneChip"><i></i><span>CONNECTED</span></div>
+
+          <div class="selection-banner" id="selectionBanner">
+            <span class="selection-pulse"></span>
+            <span id="selectionText">选择模式 · 点击网格设置源点</span>
+            <button id="cancelPick">取消</button>
+          </div>
+
+          <div class="legend" id="legend">
+            <div class="legend-head"><span>测地距离</span><span id="legendMax">0.00</span></div>
+            <div class="legend-band"></div>
+            <div class="legend-ticks"><span>0</span><span id="legendMid">1.00</span><span id="legendEnd">2.00</span></div>
+            <div class="legend-unreachable"><i></i>未连通 / 不可达</div>
+          </div>
+
+          <div class="view-readout">
+            <span>DRAG <b>ORBIT</b></span>
+            <span>SCROLL <b>ZOOM</b></span>
+            <span>CLICK <b>PICK</b></span>
+          </div>
+
+          <div class="unsolved-layer" id="loadingLayer">
+            <div class="loader-orbit"><i></i><i></i><i></i></div>
+            <strong id="loadingTitle">正在分解热核系统</strong>
+            <span id="loadingNote">构建 cotan Laplacian · 预热 Cholesky</span>
+          </div>
+        </section>
+
+        <aside class="panel analysis-panel" aria-label="解算结果与误差">
+          <section class="result-hero" id="resultHero">
+            <div class="result-label">目标点测地距离</div>
+            <div class="result-number" id="targetDistance">--<span>u</span></div>
+            <div class="result-caption" id="resultCaption">等待解算</div>
+            <div class="result-reference">
+              <span>解析参照</span>
+              <strong id="referenceDistance">--</strong>
+              <span class="error-chip" id="targetError">--</span>
+            </div>
+          </section>
+
+          <section class="panel-section timing-section">
+            <div class="section-heading">
+              <span class="section-index">05</span>
+              <h2>本次求解</h2>
+              <span class="section-note" id="solveTotal">-- ms</span>
+            </div>
+            <div class="timing-bars">
+              <div class="timing-row">
+                <span>热扩散</span><div class="timing-track"><i id="heatBar"></i></div><b id="heatTime">--</b>
+              </div>
+              <div class="timing-row">
+                <span>泊松方程</span><div class="timing-track"><i id="poissonBar"></i></div><b id="poissonTime">--</b>
+              </div>
+              <div class="timing-row">
+                <span>梯度 / 路径</span><div class="timing-track"><i id="pathBar"></i></div><b id="pathTime">--</b>
+              </div>
+            </div>
+            <div class="system-facts">
+              <div><span>未知量</span><b id="unknownCount">--</b></div>
+              <div><span>时间步 t</span><b id="timeStep">--</b></div>
+              <div><span>路径点</span><b id="pathPoints">--</b></div>
+            </div>
+          </section>
+
+          <section class="panel-section benchmark-section">
+            <div class="section-heading">
+              <span class="section-index">06</span>
+              <h2>解析参照</h2>
+              <button class="icon-button" id="rerunBenchmark" title="重新运行基准">
+                <svg viewBox="0 0 20 20"><path d="M16 6V3h-3M4 14v3h3M15.3 8A6 6 0 0 0 5 5M4.7 12A6 6 0 0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="benchmark-list" id="benchmarkList">
+              <div class="benchmark-row loading" data-bench="planar">
+                <div class="benchmark-name"><i class="bench-icon line"></i><span>平面 / 直线</span></div>
+                <div class="benchmark-error">--</div>
+                <div class="benchmark-time">-- ms</div>
+              </div>
+              <div class="benchmark-row loading" data-bench="sphere">
+                <div class="benchmark-name"><i class="bench-icon circle"></i><span>球面 / 大圆</span></div>
+                <div class="benchmark-error">--</div>
+                <div class="benchmark-time">-- ms</div>
+              </div>
+              <div class="benchmark-row loading" data-bench="disconnected">
+                <div class="benchmark-name"><i class="bench-icon split"></i><span>不连通检查</span></div>
+                <div class="benchmark-error">--</div>
+                <div class="benchmark-time">--</div>
+              </div>
+            </div>
+            <p class="benchmark-foot">误差为目标点相对误差 · 求解时间不含预分解</p>
+          </section>
+
+          <section class="method-note">
+            <div class="method-rule"><i></i>u = (M + tL)<sup>−1</sup>δ<sub>s</sub></div>
+            <div class="method-rule"><i></i>Lφ = ∇·(∇u / |∇u|)</div>
+            <p>归一化梯度后求解泊松方程；每个连通分量独立定标。</p>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="statusbar">
+        <span><i class="status-led"></i><b id="footerStatus">系统就绪</b></span>
+        <span id="meshStats">-- vertices / -- faces</span>
+        <span>WebGL2 <b id="fpsReadout">60</b> FPS</span>
+      </footer>
+    </div>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
