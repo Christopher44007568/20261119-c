@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Depth of Field Post-Process</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Depth of Field &mdash; signed CoC, layered bokeh</h1>
+      <div class="stage">
+        <canvas id="view" width="640" height="400"></canvas>
+        <div id="readout" class="readout"></div>
+      </div>
+      <section class="controls">
+        <label>Aperture f-number
+          <input id="aperture" type="range" min="0" max="5.6" step="0.1" value="1.4" />
+          <span id="apertureVal">1.4</span>
+        </label>
+        <label>Focus distance
+          <input id="focus" type="range" min="3.2" max="40" step="0.1" value="10" />
+          <span id="focusVal">10.0</span>
+        </label>
+        <label>Foreground radius scale
+          <input id="fgScale" type="range" min="0.2" max="2.5" step="0.05" value="1.3" />
+          <span id="fgVal">1.30</span>
+        </label>
+        <label>Background radius scale
+          <input id="bgScale" type="range" min="0.2" max="2.5" step="0.05" value="0.85" />
+          <span id="bgVal">0.85</span>
+        </label>
+        <label>Max CoC (px)
+          <input id="maxCoc" type="range" min="2" max="40" step="1" value="24" />
+          <span id="maxVal">24</span>
+        </label>
+        <label>Blur scale mode
+          <select id="scaleMode">
+            <option value="pixel">pixel (fixed px radius)</option>
+            <option value="physical">physical (sensor CoC)</option>
+          </select>
+        </label>
+        <label>View
+          <select id="viewMode">
+            <option value="dof">composited DoF</option>
+            <option value="original">original (linear)</option>
+            <option value="coc">signed CoC</option>
+            <option value="layers">layers</option>
+            <option value="coverage">foreground coverage</option>
+          </select>
+        </label>
+      </section>
+      <p class="hint">
+        Aperture <b>0</b> returns the untouched original. Warm CoC = near field,
+        cool = far field, grey = sharp focal plane. The dark tilted strip is a
+        thin near-camera occluder crossing the bright wall light below it.
+      </p>
+    </main>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

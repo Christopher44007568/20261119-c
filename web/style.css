@@ -1,0 +1,18 @@
+:root { color-scheme: dark; font-family: system-ui, sans-serif; }
+body { margin: 0; background: #14161a; color: #e6e8eb; }
+main { max-width: 980px; margin: 0 auto; padding: 20px; }
+h1 { font-size: 18px; font-weight: 600; margin: 0 0 14px; }
+.stage { position: relative; background: #000; border-radius: 8px; overflow: hidden; }
+canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.readout {
+  position: absolute; top: 8px; left: 10px; font: 12px/1.4 ui-monospace, monospace;
+  background: rgba(0, 0, 0, 0.55); padding: 4px 8px; border-radius: 5px; white-space: pre;
+}
+.controls {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px 18px; margin: 16px 0;
+}
+label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #b8bcc2; }
+input[type="range"] { width: 100%; }
+select { background: #22252b; color: #e6e8eb; border: 1px solid #33373d; border-radius: 5px; padding: 5px; }
+.hint { font-size: 12px; color: #9aa0a6; line-height: 1.5; }
