@@ -1,0 +1,11 @@
+{
+  "name": "adaptive-bezier-tessellation",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "test:smoke": "node scripts/browser-smoke.mjs",
+    "start": "python3 -m http.server 8000"
+  }
+}
