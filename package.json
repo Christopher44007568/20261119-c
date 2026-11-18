@@ -1,0 +1,9 @@
+{
+  "name": "aniso-brushed-metal",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node test/aniso.test.mjs",
+    "demo": "python3 -m http.server 8000"
+  }
+}
