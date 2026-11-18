@@ -1,0 +1,29 @@
+{
+  "name": "trimesh-topology-studio",
+  "version": "1.0.0",
+  "description": "Interactive triangle mesh topology analysis and repair studio",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Christopher44007568/20261119-c.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Christopher44007568/20261119-c/issues"
+  },
+  "homepage": "https://github.com/Christopher44007568/20261119-c#readme",
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.5"
+  }
+}
