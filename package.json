@@ -1,0 +1,14 @@
+{
+  "name": "lumen-progressive-path-tracer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Progressive WebGL2 path tracer with diffuse, metal and glossy materials and linear-space convergence analysis.",
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "render": "node scripts/render-reference.js",
+    "test": "node tests/check-accumulation.js && node tests/check-render.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

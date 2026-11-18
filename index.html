@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101211">
+  <title>Lumen — Progressive Path Tracer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Lumen home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 28 28" role="img">
+            <circle cx="14" cy="14" r="10.5"></circle>
+            <path d="M14 3.5v21M3.5 14h21M6.6 6.6l14.8 14.8M21.4 6.6 6.6 21.4"></path>
+          </svg>
+        </span>
+        <span class="brand-name">LUMEN</span>
+      </a>
+      <div class="mode">
+        <span class="live-dot"></span>
+        <span>Progressive path tracer</span>
+        <span class="mode-tag" id="backend-tag">WEBGL2</span>
+      </div>
+      <div class="scene-id">
+        <span>FIXED STUDY</span>
+        <strong>04 / THREE FORMS</strong>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="viewer-column" aria-label="Path traced viewport">
+        <div class="viewer" id="viewer">
+          <canvas id="render-canvas" aria-label="Progressive path traced render"></canvas>
+          <div class="viewfinder" aria-hidden="true">
+            <i class="corner tl"></i><i class="corner tr"></i>
+            <i class="corner bl"></i><i class="corner br"></i>
+            <span class="axis-label top">+Y</span>
+            <span class="axis-label left">−X</span>
+          </div>
+
+          <div class="viewer-head">
+            <div class="eyebrow"><span>STUDIO</span> / 04</div>
+            <div class="camera-readout" id="camera-readout">35°  ·  ORBIT 18° / 4°</div>
+          </div>
+
+          <div class="sample-hud">
+            <div class="sample-number" id="sample-count">0000</div>
+            <div class="sample-unit">SAMPLES<br><span>PER PIXEL</span></div>
+          </div>
+
+          <div class="viewer-foot">
+            <div class="progress-wrap">
+              <div class="progress-copy">
+                <span id="state-label">ACCUMULATING</span>
+                <span id="progress-label">0 / 1,000</span>
+              </div>
+              <div class="progress-track"><i id="progress-fill"></i></div>
+            </div>
+            <div class="time-readout"><span id="elapsed">00:00.0</span><small>ELAPSED</small></div>
+          </div>
+
+          <div class="loading" id="loading">
+            <span class="loading-ring"></span>
+            <span>INITIALIZING TRACE</span>
+          </div>
+          <div class="checkpoint-view" id="checkpoint-view" hidden>
+            <img id="checkpoint-image" alt="Selected convergence checkpoint">
+            <div class="checkpoint-caption">
+              <span id="checkpoint-label">10 SAMPLES / PIXEL</span>
+              <button type="button" id="checkpoint-close" aria-label="Close checkpoint">CLOSE ×</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-bar">
+          <button class="icon-button primary" id="pause-button" type="button" aria-label="Pause accumulation">
+            <svg class="pause-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4h3v12H6zM11 4h3v12h-3z"></path></svg>
+            <svg class="play-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 4 10 6-10 6z"></path></svg>
+          </button>
+          <div class="control-copy">
+            <strong id="pause-title">Pause</strong>
+            <span>keep accumulated history</span>
+          </div>
+          <div class="control-rule"></div>
+          <button class="text-button" id="reset-button" type="button">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.4 7.1A6.5 6.5 0 1 1 3.5 12"></path><path d="M3.5 3.8v3.8h3.8"></path></svg>
+            Restart
+          </button>
+          <button class="text-button" id="camera-button" type="button">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3"></circle><path d="M2.5 10a7.5 7.5 0 0 1 15 0M17.5 10a7.5 7.5 0 0 1-15 0"></path></svg>
+            Reset camera
+          </button>
+          <div class="input-hint"><span>DRAG</span> orbit <span>SCROLL</span> zoom <span>SPACE</span> pause</div>
+        </div>
+
+        <div class="scene-strip">
+          <div class="scene-description">
+            <span class="strip-index">01</span>
+            <p>Three primitives, one square light. Every visible pixel is resolved by unbiased Monte Carlo integration.</p>
+          </div>
+          <div class="material-list" aria-label="Material list">
+            <span><i class="swatch diffuse"></i>Diffuse</span>
+            <span><i class="swatch metal"></i>Metal</span>
+            <span><i class="swatch gloss"></i>Glossy</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="sidebar" aria-label="Convergence analysis">
+        <section class="panel reference-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="panel-kicker">GROUND TRUTH</span>
+              <h2>Reference</h2>
+            </div>
+            <span class="spp-badge">2,048 SPP</span>
+          </div>
+          <figure class="reference-frame">
+            <img src="assets/reference.png" alt="High sample reference render of three material study objects" id="reference-image">
+            <figcaption><span>FIXED CAMERA</span><span>LINEAR HDR → ACES</span></figcaption>
+          </figure>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading compact">
+            <div>
+              <span class="panel-kicker">CONVERGENCE</span>
+              <h2>Sample sequence</h2>
+            </div>
+            <span class="panel-note">10 → 1K</span>
+          </div>
+          <div class="sequence" id="sequence">
+            <button class="sample-card" type="button" data-sample="10" aria-label="View 10 sample checkpoint">
+              <img src="assets/samples-010.png" alt="10 samples per pixel">
+              <span class="card-top"><b>10</b><em>SPP</em></span>
+              <span class="card-error" data-error-for="10">—</span>
+            </button>
+            <button class="sample-card" type="button" data-sample="100" aria-label="View 100 sample checkpoint">
+              <img src="assets/samples-100.png" alt="100 samples per pixel">
+              <span class="card-top"><b>100</b><em>SPP</em></span>
+              <span class="card-error" data-error-for="100">—</span>
+            </button>
+            <button class="sample-card" type="button" data-sample="1000" aria-label="View 1000 sample checkpoint">
+              <img src="assets/samples-1000.png" alt="1000 samples per pixel">
+              <span class="card-top"><b>1K</b><em>SPP</em></span>
+              <span class="card-error" data-error-for="1000">—</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel metrics-panel">
+          <div class="panel-heading compact">
+            <div>
+              <span class="panel-kicker">LINEAR COLOR SPACE</span>
+              <h2>Error study</h2>
+            </div>
+            <span class="method-tag" id="metric-method">RMSE</span>
+          </div>
+          <div class="metric-table" id="metric-table">
+            <div class="metric-row metric-head"><span>CHECKPOINT</span><span>RMSE</span><span>ΔE%</span></div>
+            <div class="metric-row" data-metric-row="10"><span>10 spp</span><b>—</b><em>—</em></div>
+            <div class="metric-row" data-metric-row="100"><span>100 spp</span><b>—</b><em>—</em></div>
+            <div class="metric-row" data-metric-row="1000"><span>1,000 spp</span><b>—</b><em>—</em></div>
+          </div>
+          <p class="metric-caption">Mean absolute RGB error measured before tone mapping, normalized against the 2,048 spp reference. Lower is better.</p>
+          <div class="spark-wrap">
+            <div class="spark-labels"><span>L1 ERROR / LOG SPP</span><span id="error-drop">—</span></div>
+            <svg class="spark" id="error-spark" viewBox="0 0 280 64" preserveAspectRatio="none" aria-label="Error convergence chart">
+              <defs>
+                <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#d8ff64" stop-opacity=".28"></stop>
+                  <stop offset="1" stop-color="#d8ff64" stop-opacity="0"></stop>
+                </linearGradient>
+              </defs>
+              <path class="spark-grid" d="M0 16H280M0 32H280M0 48H280"></path>
+              <path class="spark-area" id="spark-area" d=""></path>
+              <path class="spark-line" id="spark-line" d=""></path>
+            </svg>
+          </div>
+        </section>
+
+        <div class="state-note">
+          <span class="state-icon">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.8 17 6.5v7L10 17.2 3 13.5v-7z"></path><path d="m3.2 6.6 6.8 3.8 6.8-3.8M10 10.4v6.6"></path></svg>
+          </span>
+          <p><strong>History is camera-bound.</strong> Orbit or zoom clears every buffer. Pause only suspends work.<span class="finite-status"><i>✓</i> 0 non-finite · zero roughness &amp; grazing guarded</span></p>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <span>MONTE CARLO / GGX / NEXT EVENT ESTIMATION</span>
+      <span id="footer-status"><i></i> RENDERER READY</span>
+      <span>LINEAR RGB · ACES FILMIC</span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/accumulation-state.js"></script>
+  <script src="js/path-tracer.js"></script>
+  <script src="assets/metrics.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
