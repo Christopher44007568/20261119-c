@@ -1,0 +1,10 @@
+[project]
+name = "mesh-spectral"
+version = "0.1.0"
+description = "Mesh Laplacian eigenbasis compressor"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
