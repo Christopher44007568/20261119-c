@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>连续旋转姿态编辑器 · Euler / Slerp / Squad</title>
+<link rel="stylesheet" href="editor.css" />
+</head>
+<body>
+<header>
+  <h1>连续旋转姿态编辑器</h1>
+  <div class="methods" id="methodSwitch">
+    <button data-method="euler">Euler 线性插值</button>
+    <button data-method="slerp" class="active">四元数 Slerp</button>
+    <button data-method="squad">Squad 曲线</button>
+  </div>
+</header>
+
+<main>
+  <section class="panel viewport-panel">
+    <div class="panel-head">
+      <h2>姿态视口（拖动旋转当前关键姿态）</h2>
+      <div class="hint">在球面上拖拽 = arcball 旋转 · 点击关键帧列表切换编辑目标</div>
+    </div>
+    <canvas id="viewport" width="420" height="420"></canvas>
+    <div class="readout" id="poseReadout"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>关键姿态</h2></div>
+    <table class="keys">
+      <thead>
+        <tr><th>#</th><th>时间 t</th><th>四元数 (w,x,y,z)</th><th>Euler (°)</th><th></th></tr>
+      </thead>
+      <tbody id="keyRows"></tbody>
+    </table>
+    <div class="row-actions">
+      <button id="addKey">+ 添加关键姿态</button>
+      <button id="dupKey">复制当前</button>
+      <button id="delKey">删除当前</button>
+      <button id="negKey">q → −q（等价姿态）</button>
+    </div>
+
+    <div class="panel-head"><h2>测试场景</h2></div>
+    <div class="presets" id="presets">
+      <button data-preset="near180">接近 180°</button>
+      <button data-preset="negq">q 与 −q</button>
+      <button data-preset="repeat">重复姿态</button>
+      <button data-preset="nonuniform">非均匀时间</button>
+      <button data-preset="eulerlong">Euler 长路</button>
+      <button data-preset="mixed">综合混合</button>
+    </div>
+
+    <div class="panel-head"><h2>播放与导出</h2></div>
+    <div class="row-actions">
+      <button id="play">▶ 播放</button>
+      <label class="frames">帧数
+        <input type="number" id="frameCount" value="240" min="8" max="2000" />
+      </label>
+      <button id="exportJson">导出矩阵 JSON</button>
+      <button id="exportCsv">导出矩阵 CSV</button>
+    </div>
+    <div class="audit" id="audit"></div>
+  </section>
+</main>
+
+<section class="panel charts">
+  <div class="panel-head">
+    <h2>角速度 |ω| 曲线（纵轴 rad/s，横轴时间）</h2>
+    <div class="legend" id="legend"></div>
+  </div>
+  <canvas id="speedChart" width="1100" height="240"></canvas>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>相邻段连接处的角速度变化</h2></div>
+  <table class="joints">
+    <thead>
+      <tr><th>关键帧</th><th>t</th><th>|ω⁻| 左</th><th>|ω⁺| 右</th>
+        <th>Δω 向量</th><th>跳变模长</th></tr>
+    </thead>
+    <tbody id="jointRows"></tbody>
+  </table>
+</section>
+
+<script type="module" src="editor.js"></script>
+</body>
+</html>

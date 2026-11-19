@@ -1,0 +1,9 @@
+{
+  "name": "rotation-pose-editor",
+  "version": "1.0.0",
+  "description": "Continuous rotation pose editor: Euler lerp vs quaternion slerp vs squad",
+  "type": "module",
+  "scripts": {
+    "verify": "node verify.js"
+  }
+}
