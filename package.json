@@ -1,0 +1,12 @@
+{
+  "name": "adjustable-bloom-pipeline",
+  "version": "1.0.0",
+  "description": "Resolution-independent adjustable Bloom pipeline (threshold, soft knee, weighted down/up sampling) with per-level metrics",
+  "type": "module",
+  "scripts": {
+    "demo": "node scripts/run-demo.js",
+    "test": "node --test test/bloom.test.js"
+  },
+  "engines": { "node": ">=20" },
+  "license": "MIT"
+}
