@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal / Recursion Lab</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene" aria-label="Live recursive portal renderer"></canvas>
+      <div class="vignette"></div>
+      <div class="scanlines"></div>
+
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"><span></span></div>
+          <div>
+            <div class="eyebrow">REALTIME TRANSIT SYSTEM</div>
+            <h1>PORTAL / RECURSION</h1>
+          </div>
+        </div>
+        <div class="top-stats">
+          <span><b id="fps">60</b> FPS</span>
+          <span><b id="depth-badge">5</b> LAYERS</span>
+          <span class="live"><i></i>STENCIL LIVE</span>
+        </div>
+      </header>
+
+      <div class="room-readout">
+        <span class="room-kicker">A → B → A → B → A → B</span>
+        <strong id="observer-room">ROOM A</strong>
+        <span id="camera-pose">POS 0.00 1.65 5.00</span>
+      </div>
+
+      <div id="toast" class="toast" role="status" aria-live="polite">
+        TRAVERSAL COMPLETE · CAMERA RECOMPUTED
+      </div>
+
+      <div class="crosshair" aria-hidden="true"><span></span></div>
+
+      <footer class="controls">
+        <div class="controls-label">NAVIGATION</div>
+        <div class="key-hints">
+          <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> MOVE</span>
+          <span>DRAG TO LOOK</span>
+          <span><kbd>SHIFT</kbd> SPRINT</span>
+        </div>
+        <div class="button-row">
+          <button data-action="traverse" class="primary">TRAVERSE →</button>
+          <button data-action="near">NEAR</button>
+          <button data-action="backside">BACKSIDE</button>
+          <button data-action="overlap">OVERLAP</button>
+          <button data-action="reset">RESET</button>
+        </div>
+      </footer>
+
+      <aside class="inspector" aria-label="Recursion inspector">
+        <div class="inspector-head">
+          <div>
+            <div class="eyebrow">FRAME INSPECTOR</div>
+            <h2>RECURSION STACK</h2>
+          </div>
+          <button id="collapse" class="icon-button" aria-label="Collapse inspector">◇</button>
+        </div>
+
+        <div class="metrics">
+          <div><span>OBSERVER</span><strong id="observer-metric">ROOM A</strong></div>
+          <div><span>PORTAL PAIR</span><strong id="pair-metric">Y 180°</strong></div>
+          <div><span>STENCIL BITS</span><strong>8 BIT</strong></div>
+        </div>
+
+        <div class="cap-row">
+          <label for="depth">RECURSION CAP</label>
+          <output id="depth-output">05</output>
+        </div>
+        <input id="depth" type="range" min="0" max="7" value="5" step="1" />
+        <div class="range-labels"><span>0 — BASE</span><span>7 — MAX</span></div>
+
+        <div class="stack-head">
+          <span>LAYER / CAMERA MATRIX / STENCIL</span>
+          <span id="mask-total">0 PX</span>
+        </div>
+        <div id="stack" class="stack"></div>
+
+        <div class="inspect-foot">
+          <span><i class="swatch live-swatch"></i>LIVE LAYER</span>
+          <span><i class="swatch mask-swatch"></i>STENCIL MASK</span>
+          <span><i class="swatch term-swatch"></i>TERMINAL</span>
+        </div>
+      </aside>
+
+      <div id="orientation-note" class="orientation-note">Drag to orbit · scroll to dolly</div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

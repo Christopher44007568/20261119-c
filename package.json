@@ -1,0 +1,29 @@
+{
+  "name": "uid5-0004",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node tests/portal.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Christopher44007568/20261119-c.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Christopher44007568/20261119-c/issues"
+  },
+  "homepage": "https://github.com/Christopher44007568/20261119-c#readme",
+  "dependencies": {
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.8"
+  }
+}
