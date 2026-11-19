@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>三角网格 BVH 射线拾取器</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>三角网格 BVH 射线拾取器</h1>
+    <p class="sub">中位数切分 vs 表面积启发式（SAH）· 节点包围盒 · 射线访问顺序 · refit 质量恶化</p>
+  </header>
+
+  <main>
+    <section class="panel controls">
+      <h2>建树策略</h2>
+      <div class="seg" id="strategySeg">
+        <button data-strategy="sah" class="active">SAH</button>
+        <button data-strategy="median">中位数切分</button>
+      </div>
+
+      <h2>几何状态</h2>
+      <div class="seg" id="stateSeg">
+        <button data-state="original" class="active">原始网格</button>
+        <button data-state="refit">refit（顶点已移动）</button>
+        <button data-state="rebuilt">rebuild 重建</button>
+      </div>
+
+      <h2>显示图层</h2>
+      <label><input type="checkbox" id="showMesh" checked /> 三角形网格</label>
+      <label><input type="checkbox" id="showBoxes" checked /> BVH 节点包围盒</label>
+      <label><input type="checkbox" id="showRay" checked /> 射线与访问顺序</label>
+
+      <h2>节点层级</h2>
+      <div class="row">
+        深度
+        <input type="range" id="depthSlider" min="0" max="0" value="0" />
+        <span id="depthLabel">0</span>
+      </div>
+      <p class="hint">滑块限定只绘制该深度的包围盒；树结构表可逐层展开。</p>
+
+      <h2>访问顺序回放</h2>
+      <div class="row">
+        <button id="playBtn">▶ 播放</button>
+        <input type="range" id="visitSlider" min="0" max="0" value="0" />
+      </div>
+      <div id="visitInfo" class="visit-info">尚未遍历</div>
+
+      <h2>射线参数</h2>
+      <div class="grid3">
+        <label>Ox<input type="number" step="0.1" id="ox" /></label>
+        <label>Oy<input type="number" step="0.1" id="oy" /></label>
+        <label>Oz<input type="number" step="0.1" id="oz" /></label>
+        <label>Dx<input type="number" step="0.1" id="dx" /></label>
+        <label>Dy<input type="number" step="0.1" id="dy" /></label>
+        <label>Dz<input type="number" step="0.1" id="dz" /></label>
+      </div>
+      <button id="applyRay">应用并重算（JS 端实时遍历）</button>
+      <button id="resetRay">重置为示例射线</button>
+
+      <h2>视角</h2>
+      <p class="hint">画布内拖动旋转，滚轮缩放。</p>
+      <div class="seg">
+        <button id="viewReset">重置视角</button>
+      </div>
+    </section>
+
+    <section class="panel canvas-wrap">
+      <canvas id="view" width="860" height="640"></canvas>
+      <div id="overlay" class="overlay"></div>
+    </section>
+
+    <section class="panel data">
+      <h2>树质量指标</h2>
+      <div id="statsBox" class="stats"></div>
+      <div id="degradeBox" class="degrade"></div>
+
+      <h2>命中结果</h2>
+      <div id="hitBox" class="hit"></div>
+
+      <h2>节点结构（逐层）</h2>
+      <div id="treeBox" class="tree"></div>
+
+      <h2>访问顺序</h2>
+      <div id="orderList" class="order-list"></div>
+    </section>
+  </main>
+
+  <script src="scene-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
