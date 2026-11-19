@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="带姿态锚点约束的动态时间规整工具，支持代价矩阵、匹配路径与动画片段重采样。"
+    />
+    <title>RETAKE / 动画时间规整</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23101d1c'/%3E%3Cpath d='M7 21h4V11H7zm7 4h4V6h-4zm7-7h4v7h-4z' fill='%23dff54a'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="RETAKE 首页">
+        <span class="brand-mark" aria-hidden="true">
+          <i></i><i></i><i></i><i></i>
+        </span>
+        <span>RETAKE</span>
+        <small>MOTION ALIGNMENT LAB</small>
+      </a>
+      <div class="topbar-meta">
+        <span class="live-dot"></span>
+        <span>LOCAL ENGINE</span>
+        <span class="version">v1.0 / DTW</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">ANIMATION RETIMING / 01</p>
+          <h1>把两段动作，<br /><em>卡在同一拍。</em></h1>
+          <p class="lede">
+            输入同一动作的两组关节采样，用单调动态时间规整找到真实对应关系。
+            锁定关键姿态、检查代价矩阵，再只重采样你需要的那一段。
+          </p>
+        </div>
+        <div class="hero-aside">
+          <span class="aside-index">01—03</span>
+          <p>不假设匀速。<br />不压缩整段。<br />只匹配动作本身。</p>
+        </div>
+      </section>
+
+      <section class="scenario-bar" aria-label="测试场景">
+        <div class="scenario-label">
+          <span>TEST SIGNALS</span>
+          <small>点击切换合成样例</small>
+        </div>
+        <div class="scenario-tabs" id="scenario-tabs"></div>
+        <p class="scenario-note" id="scenario-note" aria-live="polite"></p>
+      </section>
+
+      <section class="clip-strip">
+        <article class="clip-card clip-a">
+          <div class="clip-head">
+            <span class="clip-id">A</span>
+            <div>
+              <span class="clip-role">REFERENCE / 时间基准</span>
+              <h2 id="clip-a-name">—</h2>
+            </div>
+            <button class="icon-button" data-import="reference" type="button" title="导入 A 片段 JSON">
+              ↑
+            </button>
+          </div>
+          <dl class="clip-stats">
+            <div><dt>FRAMES</dt><dd id="clip-a-frames">—</dd></div>
+            <div><dt>DURATION</dt><dd id="clip-a-duration">—</dd></div>
+            <div><dt>JOINTS</dt><dd id="clip-a-joints">—</dd></div>
+          </dl>
+          <canvas class="clip-spark" id="spark-a" height="30" aria-hidden="true"></canvas>
+        </article>
+
+        <div class="align-glyph" aria-hidden="true">
+          <span></span>
+          <strong>DTW</strong>
+          <span></span>
+        </div>
+
+        <article class="clip-card clip-b">
+          <div class="clip-head">
+            <span class="clip-id">B</span>
+            <div>
+              <span class="clip-role">TARGET / 待对齐片段</span>
+              <h2 id="clip-b-name">—</h2>
+            </div>
+            <button class="icon-button" data-import="target" type="button" title="导入 B 片段 JSON">
+              ↑
+            </button>
+          </div>
+          <dl class="clip-stats">
+            <div><dt>FRAMES</dt><dd id="clip-b-frames">—</dd></div>
+            <div><dt>DURATION</dt><dd id="clip-b-duration">—</dd></div>
+            <div><dt>JOINTS</dt><dd id="clip-b-joints">—</dd></div>
+          </dl>
+          <canvas class="clip-spark" id="spark-b" height="30" aria-hidden="true"></canvas>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <article class="panel matrix-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">LOCAL DISTANCE MATRIX</p>
+              <h2>代价矩阵 × 匹配路径</h2>
+            </div>
+            <div class="matrix-meta">
+              <span id="matrix-shape">— × —</span>
+              <span id="matrix-path">PATH —</span>
+            </div>
+          </div>
+          <p class="matrix-error" id="alignment-error" role="alert" hidden></p>
+          <div class="matrix-wrap">
+            <canvas id="matrix-canvas" aria-label="代价矩阵与 DTW 匹配路径"></canvas>
+            <div class="matrix-tooltip" id="matrix-tooltip" hidden></div>
+            <div class="matrix-hint" id="matrix-hint">
+              <span>点击矩阵选择一对帧</span>
+              <span class="hint-dot"></span>
+              <span>色深 = 姿态差异</span>
+            </div>
+          </div>
+          <div class="matrix-legend" aria-label="代价图例">
+            <span>低代价</span>
+            <i class="legend-ramp"></i>
+            <span>高代价</span>
+            <span class="legend-separator"></span>
+            <span><i class="line-key path-key"></i>最优路径</span>
+            <span><i class="line-key anchor-key"></i>姿态锚点</span>
+          </div>
+        </article>
+
+        <aside class="side-stack">
+          <article class="panel anchor-panel">
+            <div class="panel-head compact">
+              <div>
+                <p class="eyebrow">POSE LOCKS</p>
+                <h2>姿态锚点</h2>
+              </div>
+              <span class="count-badge" id="anchor-count">0</span>
+            </div>
+            <p class="panel-copy">锚点必须在 A、B 时间轴上同时严格递增。交叉或重复顺序会被拒绝。</p>
+            <div class="anchor-form">
+              <label>
+                <span>A 帧</span>
+                <input id="anchor-ref" type="number" min="0" step="1" inputmode="numeric" />
+              </label>
+              <label>
+                <span>B 帧</span>
+                <input id="anchor-target" type="number" min="0" step="1" inputmode="numeric" />
+              </label>
+              <button class="button button-dark" id="add-anchor" type="button">加入锚点</button>
+            </div>
+            <p class="inline-error" id="anchor-error" role="alert" hidden></p>
+            <div class="anchor-list" id="anchor-list"></div>
+            <div class="anchor-actions">
+              <span id="selected-cell">未选择帧对</span>
+              <button class="text-button" id="clear-anchors" type="button">清空锚点</button>
+            </div>
+          </article>
+
+          <article class="panel metric-panel">
+            <div class="panel-head compact">
+              <div>
+                <p class="eyebrow">ALIGNMENT REPORT</p>
+                <h2>对齐质量</h2>
+              </div>
+              <span class="status-pill">PASS</span>
+            </div>
+            <div class="endpoint-grid">
+              <div class="endpoint-cell">
+                <span>起点误差</span>
+                <strong id="endpoint-start">—</strong>
+                <small>RMS / joint</small>
+              </div>
+              <div class="endpoint-cell">
+                <span>终点误差</span>
+                <strong id="endpoint-end">—</strong>
+                <small>RMS / joint</small>
+              </div>
+            </div>
+            <dl class="metric-list">
+              <div><dt>平均路径代价</dt><dd id="mean-cost">—</dd></div>
+              <div><dt>路径步数</dt><dd id="path-length">—</dd></div>
+              <div><dt>保持帧 / A→B</dt><dd id="step-counts">—</dd></div>
+            </dl>
+          </article>
+        </aside>
+      </section>
+
+      <section class="lower-grid">
+        <article class="panel stretch-panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">TIME STRETCH DISTRIBUTION</p>
+              <h2>局部时间拉伸</h2>
+            </div>
+            <span class="stretch-note">1.0 = 均匀对齐</span>
+          </div>
+          <div class="histogram" id="stretch-histogram"></div>
+          <div class="stretch-stats">
+            <div><span>MIN</span><strong id="stretch-min">—</strong></div>
+            <div><span>P10</span><strong id="stretch-p10">—</strong></div>
+            <div class="is-median"><span>MEDIAN</span><strong id="stretch-median">—</strong></div>
+            <div><span>P90</span><strong id="stretch-p90">—</strong></div>
+            <div><span>MAX</span><strong id="stretch-max">—</strong></div>
+          </div>
+        </article>
+
+        <article class="panel resample-panel">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">SEGMENT RESAMPLE</p>
+              <h2>重采样其中一段</h2>
+            </div>
+            <span class="count-badge" id="segment-count">0</span>
+          </div>
+          <p class="panel-copy">只把所选锚点区间内的 B 姿态重采样到 A 的时间轴，区间外不参与输出。</p>
+          <div class="resample-form">
+            <label>
+              <span>锚点区间</span>
+              <select id="segment-select"></select>
+            </label>
+            <label>
+              <span>输出帧数</span>
+              <input id="segment-frames" type="number" min="1" max="2000" step="1" />
+            </label>
+            <button class="button button-accent" id="resample-button" type="button">重采样此段</button>
+          </div>
+          <div class="resample-result" id="resample-result" hidden>
+            <div class="result-mark">✓</div>
+            <div>
+              <strong id="resample-title">—</strong>
+              <p id="resample-detail">—</p>
+            </div>
+            <button class="text-button" id="download-resample" type="button">下载 JSON</button>
+          </div>
+        </article>
+      </section>
+
+      <footer>
+        <span>RETAKE / MONOTONIC DTW</span>
+        <span>所有计算在浏览器本地完成</span>
+        <button class="text-button" id="download-report" type="button">导出完整报告 ↓</button>
+      </footer>
+    </main>
+
+    <dialog id="import-dialog">
+      <form method="dialog" class="dialog-card">
+        <div class="dialog-head">
+          <div>
+            <p class="eyebrow">IMPORT CLIP</p>
+            <h2 id="import-title">导入片段</h2>
+          </div>
+          <button class="dialog-close" value="cancel" aria-label="关闭">×</button>
+        </div>
+        <p class="panel-copy">
+          接受 { name, fps, frames: [{ time, joints }] }，joints 可写为关节名到 [x,y,z] 的对象，也可直接使用坐标数组。
+        </p>
+        <textarea id="import-text" spellcheck="false" aria-label="片段 JSON"></textarea>
+        <div class="dialog-actions">
+          <label class="file-button">
+            <input id="import-file" type="file" accept="application/json,.json" />
+            选择 .json 文件
+          </label>
+          <p class="inline-error" id="import-error" role="alert" hidden></p>
+          <button class="button button-accent" value="apply" id="apply-import" type="button">应用片段</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

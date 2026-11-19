@@ -1,0 +1,7 @@
+retake-cjk.woff is a subset of Noto Sans CJK SC Regular.
+
+Copyright 2014-2021 Adobe (http://www.adobe.com/).
+Noto is a trademark of Google Inc.
+
+Licensed under the SIL Open Font License, Version 1.1.
+http://scripts.sil.org/OFL

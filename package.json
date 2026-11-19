@@ -1,0 +1,15 @@
+{
+  "name": "animation-dtw-aligner",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Anchor-constrained dynamic time warping for animation pose clips",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test",
+    "test:watch": "node --test --watch"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
