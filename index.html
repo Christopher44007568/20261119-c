@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="WebGPU 浮点直方图、工作组局部归并、前缀和与分位点实验台"
+    />
+    <title>Histogram / Prefix Lab — GPU 直方图实验</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1118'/%3E%3Cpath d='M12 48V34h7v14zm11 0V24h7v24zm11 0V13h7v35zm11 0V29h7v19z' fill='%234de2c0'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient-grid" aria-hidden="true"></div>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Histogram Lab 首页">
+          <span class="brand-mark" aria-hidden="true">
+            <i style="--h: 34%"></i>
+            <i style="--h: 58%"></i>
+            <i style="--h: 88%"></i>
+            <i style="--h: 46%"></i>
+            <i style="--h: 70%"></i>
+          </span>
+          <span class="brand-copy">
+            <strong>Histogram<span>/</span>Prefix</strong>
+            <small>GPU IMAGE ANALYTICS LAB</small>
+          </span>
+        </a>
+
+        <div class="topbar-center" aria-label="实验流程">
+          <span class="flow-step is-active"><b>01</b> 分桶</span>
+          <i></i>
+          <span class="flow-step"><b>02</b> 归并</span>
+          <i></i>
+          <span class="flow-step"><b>03</b> 前缀和</span>
+          <i></i>
+          <span class="flow-step"><b>04</b> 分位点</span>
+        </div>
+
+        <div class="topbar-status">
+          <div class="engine-chip" id="engineChip">
+            <span class="status-dot" id="engineDot"></span>
+            <span>
+              <strong id="engineLabel">初始化中</strong>
+              <small id="engineSmall">检测计算后端</small>
+            </span>
+          </div>
+          <div class="version-chip" title="当前输入快照版本">
+            <span>INPUT</span>
+            <strong id="inputVersionTop">v—</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="control-rail">
+          <section class="rail-heading">
+            <p class="eyebrow"><span>EXPERIMENT</span> 05</p>
+            <h1>浮点直方图<br />与前缀和</h1>
+            <p class="rail-intro">
+              将 float32 图像值映射到精确桶，比较全局原子累加与工作组局部归并，
+              再沿 GPU 累积分布定位分位点。
+            </p>
+          </section>
+
+          <section class="panel preset-panel">
+            <div class="panel-heading compact">
+              <div>
+                <span class="section-index">01</span>
+                <h2>输入场景</h2>
+              </div>
+              <span class="micro-tag">FLOAT32</span>
+            </div>
+            <div class="preset-list" id="presetList">
+              <button class="preset-button" data-preset="empty" type="button">
+                <span class="preset-icon">∅</span>
+                <span><strong>空图</strong><small>0 samples</small></span>
+                <i>01</i>
+              </button>
+              <button class="preset-button" data-preset="constant" type="button">
+                <span class="preset-icon">≡</span>
+                <span><strong>全部同值</strong><small>constant 0.5</small></span>
+                <i>02</i>
+              </button>
+              <button class="preset-button is-active" data-preset="partial" type="button">
+                <span class="preset-icon">◫</span>
+                <span><strong>非整工作组</strong><small>6767 ÷ 256</small></span>
+                <i>03</i>
+              </button>
+              <button class="preset-button" data-preset="mixed" type="button">
+                <span class="preset-icon">!</span>
+                <span><strong>NaN / 越界</strong><small>special counters</small></span>
+                <i>04</i>
+              </button>
+              <button class="preset-button" data-preset="boundaries" type="button">
+                <span class="preset-icon">↔</span>
+                <span><strong>桶边界</strong><small>endpoints</small></span>
+                <i>05</i>
+              </button>
+              <button class="preset-button" data-preset="random" type="button">
+                <span class="preset-icon">∴</span>
+                <span><strong>随机浮点</strong><small>10240 values</small></span>
+                <i>06</i>
+              </button>
+            </div>
+            <label class="file-import" for="fileInput">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 15v4h14v-4" />
+              </svg>
+              <span><strong>导入 .f32</strong><small id="fileName">按当前宽 × 高读取</small></span>
+              <input id="fileInput" type="file" accept=".f32,.bin,application/octet-stream" />
+            </label>
+          </section>
+
+          <section class="panel config-panel">
+            <div class="panel-heading compact">
+              <div>
+                <span class="section-index">02</span>
+                <h2>分桶参数</h2>
+              </div>
+              <button class="text-button" id="resetConfig" type="button">重置</button>
+            </div>
+            <div class="field-grid">
+              <label class="field">
+                <span>图像宽</span>
+                <input id="imageWidth" type="number" min="0" max="4096" step="1" value="101" />
+                <em>px</em>
+              </label>
+              <label class="field">
+                <span>图像高</span>
+                <input id="imageHeight" type="number" min="0" max="4096" step="1" value="67" />
+                <em>px</em>
+              </label>
+              <label class="field">
+                <span>桶数</span>
+                <input id="binsInput" type="number" min="2" max="128" step="1" value="18" />
+                <em>bins</em>
+              </label>
+              <label class="field">
+                <span>工作组</span>
+                <select id="workgroupSelect">
+                  <option value="32">32</option>
+                  <option value="64">64</option>
+                  <option value="128">128</option>
+                  <option value="256" selected>256</option>
+                </select>
+                <em>threads</em>
+              </label>
+              <label class="field">
+                <span>最小值</span>
+                <input id="minInput" type="number" step="0.01" value="-0.15" />
+                <em>f32</em>
+              </label>
+              <label class="field">
+                <span>最大值</span>
+                <input id="maxInput" type="number" step="0.01" value="1.15" />
+                <em>f32</em>
+              </label>
+            </div>
+            <div class="range-readout">
+              <span id="rangeReadout">[-0.15, 1.15]</span>
+              <span id="binWidthReadout">18 bins · width 0.0722</span>
+            </div>
+            <p class="config-error" id="configError" role="alert"></p>
+            <button class="run-button" id="runButton" type="button">
+              <span class="run-icon" aria-hidden="true"></span>
+              <span><strong>运行 GPU 实验</strong><small>两种内核并行对照</small></span>
+              <kbd>⌘↵</kbd>
+            </button>
+            <label class="delay-toggle">
+              <input id="slowReadback" type="checkbox" checked />
+              <span class="switch" aria-hidden="true"></span>
+              <span>
+                <strong>模拟慢回读</strong>
+                <small>延迟 180 ms，验证版本隔离</small>
+              </span>
+            </label>
+          </section>
+
+          <section class="panel version-panel">
+            <div class="panel-heading compact">
+              <div>
+                <span class="section-index">03</span>
+                <h2>异步回读</h2>
+              </div>
+              <span class="live-dot"><i></i> GUARDED</span>
+            </div>
+            <div class="version-track">
+              <span class="version-node">
+                <small>当前输入</small>
+                <strong id="currentVersionLabel">v—</strong>
+              </span>
+              <span class="version-arrow">→</span>
+              <span class="version-node">
+                <small>已应用结果</small>
+                <strong id="appliedVersionLabel">v—</strong>
+              </span>
+            </div>
+            <p class="version-note">
+              每次提交生成独立快照。回读完成时若版本已过期，结果直接丢弃，
+              不覆盖当前输入。
+            </p>
+            <ol class="activity-log" id="activityLog" aria-live="polite">
+              <li class="is-muted"><time>—</time><span>等待第一次实验</span></li>
+            </ol>
+          </section>
+        </aside>
+
+        <section class="stage">
+          <div class="pending-banner" id="pendingBanner" hidden>
+            <span class="pending-spinner" aria-hidden="true"></span>
+            <span>
+              <strong id="pendingText">正在回读输入 v—</strong>
+              <small>旧结果已隐藏；只有匹配版本的 GPU 回读会被应用。</small>
+            </span>
+            <code id="pendingVersion">PENDING v—</code>
+          </div>
+
+          <div class="overview-grid">
+            <article class="panel image-card">
+              <div class="image-meta">
+                <div>
+                  <span class="eyebrow" id="presetEyebrow">EDGE 03</span>
+                  <h2 id="presetTitle">非整工作组</h2>
+                  <p id="presetDescription">
+                    6,767 个像素 ÷ 256；27 个工作组，末组仅 111 个有效线程。
+                  </p>
+                </div>
+                <span class="version-stamp" id="heroVersion">INPUT v—</span>
+              </div>
+              <div class="preview-frame">
+                <canvas id="inputCanvas" width="505" height="335" aria-label="输入浮点图像预览"></canvas>
+                <div class="preview-empty" id="previewEmpty" hidden>
+                  <span>∅</span>
+                  <strong>EMPTY INPUT</strong>
+                  <small>无像素，但直方图与 CDF 仍需输出全零</small>
+                </div>
+                <div class="preview-scale" id="previewScale">
+                  <span>min</span>
+                  <i></i>
+                  <span>max</span>
+                </div>
+                <div class="preview-special" id="previewSpecial">
+                  <span><i class="nan-swatch"></i>NaN</span>
+                  <span><i class="oor-swatch"></i>越界</span>
+                </div>
+                <div class="preview-corner">
+                  <b id="previewWidth">101</b><span>×</span><b id="previewHeight">67</b>
+                </div>
+              </div>
+              <div class="stat-strip">
+                <div>
+                  <small>样本</small>
+                  <strong id="statSamples">6,767</strong>
+                </div>
+                <div>
+                  <small>有效</small>
+                  <strong id="statValid">—</strong>
+                </div>
+                <div class="is-special">
+                  <small>NaN</small>
+                  <strong id="statNan">—</strong>
+                </div>
+                <div class="is-special">
+                  <small>越界</small>
+                  <strong id="statOut">—</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel parity-card" id="parityCard">
+              <div class="panel-heading">
+                <div>
+                  <span class="eyebrow">CPU EXACT CHECK</span>
+                  <h2>整数计数对照</h2>
+                </div>
+                <span class="parity-badge is-idle" id="parityBadge">WAIT</span>
+              </div>
+              <div class="parity-summary">
+                <strong id="parityStatus">等待回读</strong>
+                <p id="paritySub">提交输入后与 CPU 精确计数逐项比对。</p>
+              </div>
+              <div class="check-list" id="parityChecks">
+                <div class="check-row is-idle">
+                  <span>全局原子直方图</span><code>—</code>
+                </div>
+                <div class="check-row is-idle">
+                  <span>工作组局部桶</span><code>—</code>
+                </div>
+                <div class="check-row is-idle">
+                  <span>归并 · 前缀和 · 分位</span><code>—</code>
+                </div>
+              </div>
+              <div class="parity-footer">
+                <span>CPU ref = GPU dispatch 输入快照</span>
+                <strong id="parityDiff">Δ —</strong>
+              </div>
+            </article>
+          </div>
+
+          <div class="algorithm-grid">
+            <article class="panel algorithm-card global-card">
+              <div class="algorithm-top">
+                <span class="algorithm-number">A</span>
+                <div>
+                  <span class="eyebrow">GLOBAL ATOMIC</span>
+                  <h2>全局原子累加</h2>
+                </div>
+                <span class="kernel-time" id="globalTime">— ms</span>
+              </div>
+              <div class="pipeline">
+                <span class="is-active">classify</span><i></i>
+                <span class="is-active">atomicAdd</span><i></i>
+                <span class="is-active">scan</span>
+              </div>
+              <p class="algorithm-note">
+                每个有效线程直接竞争全局直方图原子；NaN 与越界写入独立尾部计数器。
+              </p>
+              <div class="algorithm-metrics">
+                <span><small>总计数</small><strong id="globalTotal">—</strong></span>
+                <span><small>峰值桶</small><strong id="globalPeak">—</strong></span>
+                <span><small>工作组</small><strong id="globalGroups">—</strong></span>
+              </div>
+            </article>
+
+            <article class="panel algorithm-card local-card">
+              <div class="algorithm-top">
+                <span class="algorithm-number">B</span>
+                <div>
+                  <span class="eyebrow">WORKGROUP LOCAL</span>
+                  <h2>工作组局部归并</h2>
+                </div>
+                <span class="kernel-time" id="localTime">— ms</span>
+              </div>
+              <div class="pipeline">
+                <span class="is-active">local atomics</span><i></i>
+                <span class="is-active">barrier</span><i></i>
+                <span class="is-active">merge</span><i></i>
+                <span class="is-active">scan</span>
+              </div>
+              <p class="algorithm-note">
+                每个工作组在共享内存中维护私有桶；归并内核逐桶跨组求和，输出与全局路径一致。
+              </p>
+              <div class="algorithm-metrics">
+                <span><small>归并总数</small><strong id="localTotal">—</strong></span>
+                <span><small>末组占用</small><strong id="localLast">—</strong></span>
+                <span><small>归并 Δ</small><strong id="mergeDelta">—</strong></span>
+              </div>
+            </article>
+          </div>
+
+          <section class="panel distribution-panel">
+            <div class="panel-heading distribution-heading">
+              <div>
+                <span class="eyebrow">MERGED HISTOGRAM + CDF</span>
+                <h2>归并分布</h2>
+              </div>
+              <div class="chart-legend">
+                <span><i class="legend-bar"></i>有效桶</span>
+                <span><i class="legend-line"></i>累积分布</span>
+                <span><i class="legend-special"></i>特殊计数</span>
+              </div>
+              <div class="version-inline" id="distributionVersion">v—</div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="histogramCanvas" height="270" aria-label="直方图与累积分布图"></canvas>
+              <div class="chart-empty" id="chartEmpty">
+                <span class="pending-spinner"></span>
+                <strong>等待当前版本结果</strong>
+              </div>
+            </div>
+            <div class="chart-foot">
+              <span id="histogramFootnote">范围端点：最小值归入首桶，最大值归入末桶。</span>
+              <span>条形 = GPU 归并桶 · 折线 = 有效样本 CDF</span>
+            </div>
+          </section>
+
+          <section class="panel local-panel">
+            <div class="panel-heading local-heading">
+              <div>
+                <span class="eyebrow">SHARED MEMORY SNAPSHOT</span>
+                <h2>局部桶 → 归并结果</h2>
+              </div>
+              <div class="local-heading-meta">
+                <span id="localGroupMeta">— × —</span>
+                <span class="version-inline" id="localVersion">v—</span>
+              </div>
+            </div>
+            <div class="local-layout">
+              <div class="local-table-wrap">
+                <table class="local-table" id="localTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">WORKGROUP</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="placeholder-cell">等待 GPU 局部桶回读</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <aside class="merged-aside">
+                <div class="merged-aside-head">
+                  <span>MERGE PASS</span>
+                  <i>Σ</i>
+                </div>
+                <p>每列跨工作组求和。此处整数之和必须与全局原子数组逐桶相等。</p>
+                <div class="merged-vector" id="mergedVector">
+                  <span class="is-empty">等待归并向量</span>
+                </div>
+                <div class="merged-result">
+                  <span>归并 vs 原子</span>
+                  <strong id="mergedCompare">—</strong>
+                </div>
+              </aside>
+            </div>
+            <div class="local-foot">
+              <span><i class="heat-low"></i>0</span>
+              <span class="heat-gradient"></span>
+              <span><i class="heat-high"></i><b id="heatMax">—</b></span>
+              <p>热色表示该工作组在该桶中的计数；NaN 与越界列固定在右侧。</p>
+            </div>
+          </section>
+
+          <section class="panel quantile-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="eyebrow">PREFIX SUM → QUANTILES</span>
+                <h2>累积分布与分位点</h2>
+              </div>
+              <span class="version-inline" id="quantileVersion">v—</span>
+            </div>
+            <div class="quantile-layout">
+              <div class="cdf-chart-wrap">
+                <canvas id="cdfCanvas" height="220" aria-label="GPU 累积分布函数"></canvas>
+                <div class="cdf-axis-labels">
+                  <span id="cdfMinLabel">min</span>
+                  <span>有效样本累积 %</span>
+                  <span id="cdfMaxLabel">max</span>
+                </div>
+              </div>
+              <div class="quantile-table-wrap">
+                <table class="quantile-table">
+                  <thead>
+                    <tr>
+                      <th>分位</th>
+                      <th>桶</th>
+                      <th>估算值</th>
+                      <th>累计</th>
+                    </tr>
+                  </thead>
+                  <tbody id="quantileRows">
+                    <tr class="placeholder-row">
+                      <td colspan="4">等待当前版本 GPU 分位点</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="quantile-foot">
+              <span>目标秩 = ceil(p × 有效样本数)，在 GPU CDF 中二分定位。</span>
+              <strong id="quantileStatus">PENDING</strong>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>HISTOGRAM / PREFIX LAB</span>
+        <span>float32 · inclusive scan · exact u32 counters</span>
+        <span id="footerEngine">engine: detecting</span>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

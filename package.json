@@ -1,0 +1,12 @@
+{
+  "name": "gpu-histogram-prefix-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "WebGPU float32 histogram, local workgroup merge, prefix sum, and quantile experiment",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check js/app.js && node --check js/ui.js && node --check js/charts.js && node --check js/gpu-engine.js"
+  }
+}
