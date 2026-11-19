@@ -1,0 +1,4641 @@
+{
+  "generator": "lsys",
+  "procedural": true,
+  "random_seed": null,
+  "grammar_file": "examples/branching.lsys",
+  "iterations": 4,
+  "estimate": {
+    "iterations": 4,
+    "total_symbols": 1191,
+    "forward_symbols": 170,
+    "branch_pushes": 255,
+    "max_bracket_depth": 4,
+    "symbol_counts": {
+      "&": 85,
+      "+": 85,
+      "/": 85,
+      "A": 256,
+      "F": 170,
+      "[": 255,
+      "]": 255
+    },
+    "counts_per_iteration": [
+      {
+        "A": 1
+      },
+      {
+        "F": 2,
+        "[": 3,
+        "&": 1,
+        "A": 4,
+        "]": 3,
+        "+": 1,
+        "/": 1
+      },
+      {
+        "F": 10,
+        "[": 15,
+        "&": 5,
+        "A": 16,
+        "]": 15,
+        "+": 5,
+        "/": 5
+      },
+      {
+        "F": 42,
+        "[": 63,
+        "&": 21,
+        "A": 64,
+        "]": 63,
+        "+": 21,
+        "/": 21
+      },
+      {
+        "F": 170,
+        "[": 255,
+        "&": 85,
+        "A": 256,
+        "]": 255,
+        "+": 85,
+        "/": 85
+      }
+    ]
+  },
+  "stats": {
+    "branch_count": 64,
+    "forward_segments": 170,
+    "stack_high_water": 4,
+    "vertex_count": 1958,
+    "face_count": 2384
+  },
+  "branches": [
+    {
+      "branch_id": 0,
+      "parent_id": null,
+      "depth": 0,
+      "segment_count": 8,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 8
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 14,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 61,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 1,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 6,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 6
+      },
+      "lineage_examples": [
+        {
+          "node_id": 16,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 29,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 121,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 2,
+      "parent_id": 1,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 76,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 89,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 361,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 3,
+      "parent_id": 2,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 316,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 329,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 4,
+      "parent_id": 2,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 331,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 344,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 5,
+      "parent_id": 2,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 346,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 359,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 6,
+      "parent_id": 1,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 91,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 104,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 421,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 7,
+      "parent_id": 6,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 376,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 389,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 8,
+      "parent_id": 6,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 391,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 404,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 9,
+      "parent_id": 6,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 406,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 419,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 10,
+      "parent_id": 1,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 106,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 119,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 481,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 11,
+      "parent_id": 10,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 436,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 449,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 12,
+      "parent_id": 10,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 451,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 464,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 13,
+      "parent_id": 10,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 466,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 479,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 14,
+      "parent_id": 1,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 496,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 509,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 15,
+      "parent_id": 1,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 511,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 524,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 16,
+      "parent_id": 1,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 526,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 539,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 17,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 6,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 6
+      },
+      "lineage_examples": [
+        {
+          "node_id": 31,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 44,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 181,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 18,
+      "parent_id": 17,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 136,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 149,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 601,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 19,
+      "parent_id": 18,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 556,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 569,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 20,
+      "parent_id": 18,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 571,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 584,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 21,
+      "parent_id": 18,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 586,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 599,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 22,
+      "parent_id": 17,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 151,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 164,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 661,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 23,
+      "parent_id": 22,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 616,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 629,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 24,
+      "parent_id": 22,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 631,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 644,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 25,
+      "parent_id": 22,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 646,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 659,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 26,
+      "parent_id": 17,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 166,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 179,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 721,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 27,
+      "parent_id": 26,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 676,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 689,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 28,
+      "parent_id": 26,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 691,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 704,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 29,
+      "parent_id": 26,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 706,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 719,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 30,
+      "parent_id": 17,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 736,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 749,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 31,
+      "parent_id": 17,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 751,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 764,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 32,
+      "parent_id": 17,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 766,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 779,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 33,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 6,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 6
+      },
+      "lineage_examples": [
+        {
+          "node_id": 46,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 59,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 241,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 34,
+      "parent_id": 33,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 196,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 209,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 841,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 35,
+      "parent_id": 34,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 796,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 809,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 36,
+      "parent_id": 34,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 811,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 824,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 37,
+      "parent_id": 34,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 826,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 839,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 38,
+      "parent_id": 33,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 211,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 224,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 901,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 39,
+      "parent_id": 38,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 856,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 869,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 40,
+      "parent_id": 38,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 871,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 884,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 41,
+      "parent_id": 38,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 886,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 899,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 42,
+      "parent_id": 33,
+      "depth": 2,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 226,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 239,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 961,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 43,
+      "parent_id": 42,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 916,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 929,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 44,
+      "parent_id": 42,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 931,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 944,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 45,
+      "parent_id": 42,
+      "depth": 3,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 946,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 959,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 46,
+      "parent_id": 33,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 976,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 989,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 47,
+      "parent_id": 33,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 991,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1004,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 48,
+      "parent_id": 33,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1006,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1019,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 49,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 256,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 269,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 1081,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 50,
+      "parent_id": 49,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1036,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1049,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 51,
+      "parent_id": 49,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1051,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1064,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 52,
+      "parent_id": 49,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1066,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1079,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 53,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 271,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 284,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 1141,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 54,
+      "parent_id": 53,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1096,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1109,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 55,
+      "parent_id": 53,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1111,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1124,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 56,
+      "parent_id": 53,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1126,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1139,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 57,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 4,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 4
+      },
+      "lineage_examples": [
+        {
+          "node_id": 286,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 299,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        },
+        {
+          "node_id": 1201,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 58,
+      "parent_id": 57,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1156,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1169,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 59,
+      "parent_id": 57,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1171,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1184,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 60,
+      "parent_id": 57,
+      "depth": 2,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1186,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1199,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 61,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1216,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1229,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              3
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 62,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1231,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1244,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              7
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "branch_id": 63,
+      "parent_id": 0,
+      "depth": 1,
+      "segment_count": 2,
+      "start_rule": "A",
+      "rules_used": [
+        "A"
+      ],
+      "rule_segment_counts": {
+        "A": 2
+      },
+      "lineage_examples": [
+        {
+          "node_id": 1246,
+          "rule": "A",
+          "rhs_index": 0,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              0
+            ]
+          ]
+        },
+        {
+          "node_id": 1259,
+          "rule": "A",
+          "rhs_index": 13,
+          "lineage": [
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              14
+            ],
+            [
+              "A",
+              11
+            ],
+            [
+              "A",
+              13
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "ok": true,
+    "watertight": {
+      "ok": true,
+      "edge_count": 4256,
+      "boundary_edges": [],
+      "boundary_edge_count": 0,
+      "non_manifold_edges": [],
+      "non_manifold_edge_count": 0
+    },
+    "frame": {
+      "ok": true,
+      "frames_checked": 234,
+      "max_orthonormality_error": 2.220446049250313e-16,
+      "max_handedness_error": 3.3306690738754696e-16
+    },
+    "twist": {
+      "ok": true,
+      "max_roll_degrees": 25.700000000000003,
+      "max_ring_to_ring_rotation_degrees": 1.4787793334710982e-06,
+      "roll_by_branch": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.0,
+        "5": 25.700000000000003,
+        "6": 0.0,
+        "7": 0.0,
+        "8": 0.0,
+        "9": 25.700000000000003,
+        "10": 25.700000000000003,
+        "11": 0.0,
+        "12": 0.0,
+        "13": 25.700000000000003,
+        "14": 0.0,
+        "15": 0.0,
+        "16": 25.700000000000003,
+        "17": 0.0,
+        "18": 0.0,
+        "19": 0.0,
+        "20": 0.0,
+        "21": 25.700000000000003,
+        "22": 0.0,
+        "23": 0.0,
+        "24": 0.0,
+        "25": 25.700000000000003,
+        "26": 25.700000000000003,
+        "27": 0.0,
+        "28": 0.0,
+        "29": 25.700000000000003,
+        "30": 0.0,
+        "31": 0.0,
+        "32": 25.700000000000003,
+        "33": 25.700000000000003,
+        "34": 0.0,
+        "35": 0.0,
+        "36": 0.0,
+        "37": 25.700000000000003,
+        "38": 0.0,
+        "39": 0.0,
+        "40": 0.0,
+        "41": 25.700000000000003,
+        "42": 25.700000000000003,
+        "43": 0.0,
+        "44": 0.0,
+        "45": 25.700000000000003,
+        "46": 0.0,
+        "47": 0.0,
+        "48": 25.700000000000003,
+        "49": 0.0,
+        "50": 0.0,
+        "51": 0.0,
+        "52": 25.700000000000003,
+        "53": 0.0,
+        "54": 0.0,
+        "55": 0.0,
+        "56": 25.700000000000003,
+        "57": 25.700000000000003,
+        "58": 0.0,
+        "59": 0.0,
+        "60": 25.700000000000003,
+        "61": 0.0,
+        "62": 0.0,
+        "63": 25.700000000000003
+      },
+      "note": "roll is explicitly driven by \\ and / symbols and is reset at every branch push"
+    },
+    "turns": {
+      "ok": true,
+      "sharp_turn_count": 0,
+      "events": [],
+      "threshold_degrees": 150.0,
+      "note": "sharp turns keep a continuous frame; presence of events is diagnostic, not a failure"
+    },
+    "junctions": {
+      "ok": true,
+      "junctions": [
+        {
+          "parent_branch": 0,
+          "parent_point_index": 1,
+          "child_branches": [
+            1,
+            17,
+            33
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1872,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 1,
+          "parent_point_index": 1,
+          "child_branches": [
+            2,
+            6,
+            10
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1873,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            1.901077,
+            0.433659
+          ]
+        },
+        {
+          "parent_branch": 2,
+          "parent_point_index": 1,
+          "child_branches": [
+            3,
+            4,
+            5
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1874,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            2.524957,
+            1.21518
+          ]
+        },
+        {
+          "parent_branch": 6,
+          "parent_point_index": 1,
+          "child_branches": [
+            7,
+            8,
+            9
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1875,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -0.433659,
+            2.713017,
+            0.824419
+          ]
+        },
+        {
+          "parent_branch": 10,
+          "parent_point_index": 1,
+          "child_branches": [
+            11,
+            12,
+            13
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1876,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            2.802154,
+            0.867318
+          ]
+        },
+        {
+          "parent_branch": 1,
+          "parent_point_index": 3,
+          "child_branches": [
+            14,
+            15,
+            16
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1877,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            3.703231,
+            1.300977
+          ]
+        },
+        {
+          "parent_branch": 17,
+          "parent_point_index": 1,
+          "child_branches": [
+            18,
+            22,
+            26
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1878,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -0.433659,
+            1.901077,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 18,
+          "parent_point_index": 1,
+          "child_branches": [
+            19,
+            20,
+            21
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1879,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -0.824419,
+            2.713017,
+            0.433659
+          ]
+        },
+        {
+          "parent_branch": 22,
+          "parent_point_index": 1,
+          "child_branches": [
+            23,
+            24,
+            25
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1880,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -1.21518,
+            2.524957,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 26,
+          "parent_point_index": 1,
+          "child_branches": [
+            27,
+            28,
+            29
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1881,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -0.867318,
+            2.802154,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 17,
+          "parent_point_index": 3,
+          "child_branches": [
+            30,
+            31,
+            32
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1882,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -1.300977,
+            3.703231,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 33,
+          "parent_point_index": 1,
+          "child_branches": [
+            34,
+            38,
+            42
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1883,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            2.0,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 34,
+          "parent_point_index": 1,
+          "child_branches": [
+            35,
+            36,
+            37
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1884,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -0.18806,
+            2.901077,
+            0.39076
+          ]
+        },
+        {
+          "parent_branch": 38,
+          "parent_point_index": 1,
+          "child_branches": [
+            39,
+            40,
+            41
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1885,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -0.39076,
+            2.901077,
+            -0.18806
+          ]
+        },
+        {
+          "parent_branch": 42,
+          "parent_point_index": 1,
+          "child_branches": [
+            43,
+            44,
+            45
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1886,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 33,
+          "parent_point_index": 3,
+          "child_branches": [
+            46,
+            47,
+            48
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1887,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            4.0,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 0,
+          "parent_point_index": 3,
+          "child_branches": [
+            49,
+            53,
+            57
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1888,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            3.0,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 49,
+          "parent_point_index": 1,
+          "child_branches": [
+            50,
+            51,
+            52
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1889,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            3.901077,
+            0.433659
+          ]
+        },
+        {
+          "parent_branch": 53,
+          "parent_point_index": 1,
+          "child_branches": [
+            54,
+            55,
+            56
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1890,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            -0.433659,
+            3.901077,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 57,
+          "parent_point_index": 1,
+          "child_branches": [
+            58,
+            59,
+            60
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1891,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            4.0,
+            0.0
+          ]
+        },
+        {
+          "parent_branch": 0,
+          "parent_point_index": 5,
+          "child_branches": [
+            61,
+            62,
+            63
+          ],
+          "tube_count": 4,
+          "apex_vertex": 1892,
+          "welded": true,
+          "contact_gap": 0.0,
+          "junction_position": [
+            0.0,
+            5.0,
+            0.0
+          ]
+        }
+      ],
+      "welded_junction_count": 21,
+      "junction_edge_manifold": true,
+      "max_crack_gap": 0.0,
+      "radius_mismatch_count": 63,
+      "note": "child tubes are sealed tubes ending exactly on the parent branch point (zero contact gap); radius differences are the intended tapering, not cracks"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+# Explicit roll test: backslash/slash twist the cross-section frame around
+# the heading axis, including twists immediately before branch junctions.
+angle 45
+step 1.0
+width 0.15
+branch_scale 0.70
+segments 12
+
+axiom A
+A -> F \ F \ F [ + A ] / F [ - A ] F

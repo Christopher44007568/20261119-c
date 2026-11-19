@@ -1,0 +1,4 @@
+digraph derivation {
+  node [shape=circle, fontsize=10];
+  n0 [label="A\n0", style=filled, fillcolor="#666666"];
+}

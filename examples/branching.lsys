@@ -1,0 +1,12 @@
+# Axial branching test: repeated [ push/pop ] junctions in 3D.
+# Exercises ring welding and junction crack checks.
+angle 25.7
+step 1.0
+width 0.16
+branch_scale 0.70
+width_scale 0.82
+length_scale 0.92
+segments 8
+
+axiom A
+A -> F [ & A ] [ + A ] [ / A ] F A

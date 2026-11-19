@@ -1,0 +1,12 @@
+# Back-bend and near-180 degree turn test.
+# '|' is an exact U-turn; repeated +/- approach a 180 heading change.
+# The continuous frame must survive these without flipping or cracking.
+angle 30
+step 1.0
+width 0.13
+branch_scale 0.75
+segments 10
+
+axiom A
+A -> F + F | F - - - F B
+B -> F ^ F | F [ + B ] F
