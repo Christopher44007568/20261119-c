@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>镜面反射光路求解器</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+  <header>
+    <h1>镜面反射光路求解器</h1>
+    <p class="subtitle">镜像展开法枚举有限反射次数内的全部光路，并按反射定律、有限镜边与遮挡逐一验证</p>
+  </header>
+
+  <main>
+    <section class="canvas-wrap">
+      <canvas id="scene" width="920" height="640"></canvas>
+      <div id="tooltip" class="tooltip hidden"></div>
+    </section>
+
+    <aside class="panel">
+      <fieldset>
+        <legend>场景预设</legend>
+        <div class="btn-grid">
+          <button data-preset="parallel">平行镜</button>
+          <button data-preset="rightAngle">直角镜</button>
+          <button data-preset="occluder">遮挡线段</button>
+          <button data-preset="finite">有限边界</button>
+          <button data-preset="single">单镜</button>
+          <button data-preset="corridorBlock">镜间遮挡</button>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>求解参数</legend>
+        <label class="row">最大反射次数
+          <input type="range" id="maxBounces" min="0" max="5" value="3" />
+          <span id="maxBouncesVal">3</span>
+        </label>
+        <label class="row">采样射线数
+          <input type="range" id="sampleCount" min="36" max="3600" step="36" value="720" />
+          <span id="sampleCountVal">720</span>
+        </label>
+        <label class="row">接收半径
+          <input type="range" id="receiverRadius" min="0.05" max="0.6" step="0.01" value="0.15" />
+          <span id="receiverRadiusVal">0.15</span>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>显示</legend>
+        <label><input type="checkbox" id="showRejected" checked /> 被拒绝候选（红）</label>
+        <label><input type="checkbox" id="showSampling" /> 密集采样射线（灰）</label>
+        <label><input type="checkbox" id="showReached" checked /> 采样命中射线（橙）</label>
+        <label><input type="checkbox" id="showLabels" checked /> 编号与长度标注</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>统计</legend>
+        <div id="stats" class="stats"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>光路列表（点击定位）</legend>
+        <ol id="pathList" class="path-list"></ol>
+      </fieldset>
+
+      <p class="hint">拖动镜片端点/中点、光源与接收点即可实时重算；右键画布删除最近的镜段或遮挡段。</p>
+    </aside>
+  </main>
+
+  <script src="src/geometry.js"></script>
+  <script src="src/solver.js"></script>
+  <script src="src/presets.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>

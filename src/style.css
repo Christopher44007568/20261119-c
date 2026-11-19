@@ -1,0 +1,152 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #0f1420;
+  color: #e6ebf5;
+}
+
+header {
+  padding: 14px 22px 6px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 20px;
+  color: #7fd1ff;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: #93a0b5;
+}
+
+main {
+  display: flex;
+  gap: 16px;
+  padding: 12px 22px 26px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.canvas-wrap {
+  position: relative;
+  border: 1px solid #2a3550;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+canvas {
+  display: block;
+  background: #161d2e;
+  cursor: crosshair;
+}
+
+.panel {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+fieldset {
+  border: 1px solid #2a3550;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0;
+  background: #161d2e;
+}
+
+legend {
+  padding: 0 6px;
+  font-size: 12.5px;
+  color: #7fd1ff;
+}
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+button {
+  background: #22304d;
+  color: #dce6f7;
+  border: 1px solid #33456b;
+  border-radius: 6px;
+  padding: 7px 4px;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+button:hover { background: #2d4066; }
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  padding: 3px 0;
+}
+
+label.row { justify-content: space-between; }
+
+input[type="range"] { flex: 1; }
+
+.row span {
+  min-width: 34px;
+  text-align: right;
+  color: #8fe3a7;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats {
+  font-size: 12.5px;
+  line-height: 1.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats b { color: #8fe3a7; }
+.stats .rej { color: #ff8a8a; }
+
+.path-list {
+  margin: 0;
+  padding-left: 20px;
+  max-height: 230px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+.path-list li {
+  padding: 3px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.path-list li:hover { background: #22304d; }
+.path-list li.active { background: #2d4066; }
+
+.hint {
+  font-size: 11.5px;
+  color: #7c8aa3;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(10, 15, 26, 0.92);
+  border: 1px solid #33456b;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 11.5px;
+  white-space: pre;
+  transform: translate(12px, 12px);
+  z-index: 5;
+}
+
+.hidden { display: none; }

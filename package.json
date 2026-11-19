@@ -1,0 +1,11 @@
+{
+  "name": "mirror-reflection-solver",
+  "version": "1.0.0",
+  "description": "2D specular mirror reflection path solver with interactive UI",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "report": "node tools/validation_report.mjs",
+    "svg": "node tools/render_svg.mjs"
+  }
+}
