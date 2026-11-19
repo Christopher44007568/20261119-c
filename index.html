@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0f17" />
+    <title>Cage Coordinate Lab · 闭笼形变编辑器</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div class="page-glow page-glow-a"></div>
+    <div class="page-glow page-glow-b"></div>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 44 44">
+              <path d="M9 12.5 22 5l13 7.5v18L22 38 9 30.5z"></path>
+              <path d="m9 12.5 13 7.5 13-7.5M22 20v18"></path>
+              <circle cx="22" cy="20" r="2.4"></circle>
+            </svg>
+          </div>
+          <div>
+            <p class="eyebrow">CAGE COORDINATE LAB</p>
+            <h1>闭笼形变编辑器</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <div class="status-pill" id="statusBadge">
+            <span class="status-dot"></span>
+            <span id="statusText">闭笼有效</span>
+          </div>
+          <button class="button button-ghost" id="exportWeights" type="button">
+            导出权重缓存
+          </button>
+          <button class="button button-accent" id="exportMesh" type="button">
+            导出受控网格
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="stage-column">
+          <div class="stage-card">
+            <div class="stage-toolbar">
+              <div class="toolbar-title">
+                <span class="section-kicker">VIEWPORT</span>
+                <strong>控制笼与内部细网格</strong>
+              </div>
+              <div class="tool-buttons">
+                <button class="tool-button" id="resetPose" type="button" title="撤销所有形变">
+                  重置形变
+                </button>
+                <button class="tool-button" id="addVertex" type="button" title="在最长的控制边上插入顶点">
+                  + 控制点
+                </button>
+                <button class="tool-button" id="removeVertex" type="button" title="删除当前选中的控制点">
+                  − 控制点
+                </button>
+                <button class="tool-button tool-danger" id="resetScene" type="button" title="回到初始控制笼">
+                  全部重置
+                </button>
+              </div>
+            </div>
+
+            <div class="canvas-frame">
+              <canvas
+                id="stageCanvas"
+                aria-label="可拖动控制笼顶点查看网格变形的编辑画布"
+              ></canvas>
+              <div class="canvas-overlay-top">
+                <span class="canvas-chip" id="meshChip">— 个细网格顶点</span>
+                <span class="canvas-chip canvas-chip-muted" id="cacheChip">cache —</span>
+              </div>
+              <div class="canvas-hint">
+                <kbd>拖动</kbd> 笼顶点
+                <span></span>
+                <kbd>点击</kbd> 细网格点观察权重
+              </div>
+              <div class="error-banner" id="errorBanner" hidden>
+                <span class="error-icon">!</span>
+                <div>
+                  <strong>已拒绝本次修改</strong>
+                  <p id="errorMessage"></p>
+                </div>
+              </div>
+              <div class="toast" id="toast" hidden></div>
+            </div>
+
+            <div class="stage-footer">
+              <div class="stat-item">
+                <span>笼顶点</span>
+                <strong id="cageStat">0</strong>
+              </div>
+              <div class="stat-item">
+                <span>细网格三角形</span>
+                <strong id="triangleStat">0</strong>
+              </div>
+              <div class="stat-item">
+                <span>权重和范围</span>
+                <strong id="sumStat">—</strong>
+              </div>
+              <div class="stat-item">
+                <span>拓扑版本</span>
+                <strong id="revisionStat">0</strong>
+              </div>
+            </div>
+          </div>
+
+          <section class="method-strip" aria-label="求解流程">
+            <article>
+              <span class="method-index">01</span>
+              <div>
+                <h2>先验校验</h2>
+                <p>单一闭合环、无自交，失败时拒绝提交。</p>
+              </div>
+            </article>
+            <article>
+              <span class="method-index">02</span>
+              <div>
+                <h2>实求 MVC</h2>
+                <p>从参考笼和细网格位置计算均值坐标，不注入目标形变。</p>
+              </div>
+            </article>
+            <article>
+              <span class="method-index">03</span>
+              <div>
+                <h2>缓存与回退</h2>
+                <p>拓扑变化重建权重；非法笼保持上一次有效网格。</p>
+              </div>
+            </article>
+          </section>
+        </section>
+
+        <aside class="inspector">
+          <section class="inspector-card control-card">
+            <div class="card-heading">
+              <div>
+                <span class="section-kicker">MESH DENSITY</span>
+                <h2>细网格精度</h2>
+              </div>
+              <span class="resolution-value" id="resolutionValue">5×</span>
+            </div>
+            <input
+              class="range-input"
+              id="resolutionRange"
+              type="range"
+              min="2"
+              max="9"
+              step="1"
+              value="5"
+              aria-label="细网格细分精度"
+            />
+            <p class="control-note">修改后重建细网格并写入新的权重缓存。</p>
+          </section>
+
+          <section class="inspector-card probe-card">
+            <div class="card-heading">
+              <div>
+                <span class="section-kicker">WEIGHT PROBE</span>
+                <h2>内部点权重</h2>
+              </div>
+              <span class="selection-tag" id="selectionTag">自动选中</span>
+            </div>
+            <div class="point-readout" id="selectedPoint">—</div>
+            <div class="sum-readout">
+              <span>Σ 权重</span>
+              <strong id="weightSum">—</strong>
+            </div>
+            <div class="sum-track"><span id="sumFill"></span></div>
+            <p class="probe-note" id="probeNote">点击画布上的细网格点切换探针。</p>
+          </section>
+
+          <section class="inspector-card weights-card">
+            <div class="card-heading">
+              <div>
+                <span class="section-kicker">CAGE INFLUENCE</span>
+                <h2>笼顶点权重</h2>
+              </div>
+              <span class="count-badge" id="weightCount">0</span>
+            </div>
+            <div class="weight-list" id="weightList"></div>
+          </section>
+
+          <section class="inspector-card cache-card">
+            <div class="card-heading">
+              <div>
+                <span class="section-kicker">CACHE STATUS</span>
+                <h2>权重缓存</h2>
+              </div>
+              <span class="cache-live"><i></i> live</span>
+            </div>
+            <code class="fingerprint" id="fingerprint">—</code>
+            <div class="cache-metrics">
+              <div><span>命中</span><strong id="cacheHits">0</strong></div>
+              <div><span>重算</span><strong id="cacheMisses">0</strong></div>
+              <div><span>条目</span><strong id="cacheEntries">0</strong></div>
+            </div>
+          </section>
+
+          <section class="inspector-card legend-card">
+            <div class="legend-row">
+              <span>0.0</span>
+              <div class="legend-ramp"></div>
+              <span>1.0</span>
+            </div>
+            <p>颜色表示当前探针在各笼顶点上的归一化权重。点击权重行可在画布上查看对应的权重热图。</p>
+          </section>
+        </aside>
+      </main>
+    </div>
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

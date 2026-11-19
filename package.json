@@ -1,0 +1,11 @@
+{
+  "name": "cage-deform-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive closed-cage coordinate deformation editor",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test test/*.test.js"
+  }
+}
