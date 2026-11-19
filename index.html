@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ece9df">
+  <title>Biharmonic Field Lab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23ece9df'/%3E%3Cpath d='M5 8.5 16 2l11 6.5v15L16 30 5 23.5zM10 11.5 16 8l6 3.5v9L16 24l-6-3.5z' fill='none' stroke='%231d2824' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%231d2824'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Biharmonic Field Lab">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M5 8.5 16 2l11 6.5v15L16 30 5 23.5z" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M10 11.5 16 8l6 3.5v9L16 24l-6-3.5z" stroke="currentColor" stroke-width="1.1"/>
+            <circle cx="16" cy="16" r="2.2" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <span class="brand-kicker">FIELD LAB / 006</span>
+          <strong>Biharmonic weights</strong>
+        </span>
+      </a>
+
+      <div class="topbar-center">
+        <span class="live-dot" id="live-dot"></span>
+        <span id="solver-status">SOLVED · 52 × 38</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-button" id="about-button" type="button" aria-label="方法说明" title="方法说明">i</button>
+        <button class="text-button" id="reset-button" type="button">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3.2 5.1A5.25 5.25 0 1 1 2.8 9" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M3 2.7v2.8h2.8" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+          Resolve rest pose
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar panel">
+        <div class="panel-heading">
+          <span class="section-index">01</span>
+          <div>
+            <h2>Domain</h2>
+            <p>Polygon with interior void</p>
+          </div>
+        </div>
+
+        <div class="domain-card">
+          <svg class="domain-glyph" viewBox="0 0 220 132" fill="none" aria-hidden="true">
+            <defs>
+              <pattern id="hatch-small" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+                <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-width=".8"/>
+              </pattern>
+            </defs>
+            <path class="domain-shape" d="M18 52 37 16l62-8 55 8 45 30 6 42-22 36-48 10-58-8-42-28z"/>
+            <path class="hole-shape" d="m105 46 32-11 21 20 7 31-24 22-35-7-19-24z"/>
+            <path class="hole-hatch" d="m105 46 32-11 21 20 7 31-24 22-35-7-19-24z"/>
+            <circle cx="177" cy="66" r="5" fill="#f4a261" stroke="#1e2824" stroke-width="1.5"/>
+            <circle cx="47" cy="57" r="4" fill="#6aa8d7" stroke="#1e2824" stroke-width="1.5"/>
+            <circle cx="90" cy="111" r="4" fill="#a78bca" stroke="#1e2824" stroke-width="1.5"/>
+          </svg>
+          <div class="domain-meta">
+            <span><b>Ω</b> decagon</span>
+            <span><b>V</b> hexagonal void</span>
+            <span><b>N</b> <span id="node-count">—</span> samples</span>
+          </div>
+        </div>
+
+        <div class="panel-heading compact">
+          <span class="section-index">02</span>
+          <div>
+            <h2>Boundary conditions</h2>
+            <p>Enforced by projection</p>
+          </div>
+        </div>
+
+        <div class="condition-list">
+          <div class="condition">
+            <span class="condition-tag">D</span>
+            <code>w<sub>i</sub>(h<sub>j</sub>) = δ<sub>ij</sub></code>
+            <span>Dirichlet</span>
+          </div>
+          <div class="condition">
+            <span class="condition-tag">Σ</span>
+            <code>Σ<sub>i</sub> w<sub>i</sub>(x) = 1</code>
+            <span>Partition</span>
+          </div>
+          <div class="condition">
+            <span class="condition-tag">□</span>
+            <code>0 ≤ w<sub>i</sub>(x) ≤ 1</code>
+            <span>Box bounds</span>
+          </div>
+          <div class="condition">
+            <span class="condition-tag">∂</span>
+            <code>∂<sub>n</sub>w<sub>i</sub> = 0</code>
+            <span>Free boundary</span>
+          </div>
+        </div>
+
+        <div class="panel-heading compact">
+          <span class="section-index">03</span>
+          <div>
+            <h2>Feasibility</h2>
+            <p>Constraint audit</p>
+          </div>
+        </div>
+
+        <div class="audit-list" id="audit-list">
+          <div class="audit-row"><span>Handles inside Ω</span><b data-audit="inside">checking</b></div>
+          <div class="audit-row"><span>Distinct Dirichlet nodes</span><b data-audit="distinct">checking</b></div>
+          <div class="audit-row"><span>Connected free domain</span><b data-audit="connected">checking</b></div>
+          <div class="audit-row"><span>Active bound locks</span><b data-audit="locks">0</b></div>
+        </div>
+
+        <div class="feasibility-note" id="feasibility-note">
+          <span class="note-mark">!</span>
+          <p>If two handles share a node, or a handle falls in the void, the Dirichlet system is infeasible. Dragging is constrained to Ω and conflicts are reported, never silently bridged.</p>
+        </div>
+      </aside>
+
+      <section class="stage">
+        <div class="stage-head">
+          <div class="view-title">
+            <span>CANVAS / <b id="view-index">A</b></span>
+            <h1 id="view-title">Deformed mesh</h1>
+          </div>
+          <div class="mode-switch" role="group" aria-label="显示模式">
+            <button class="mode active" data-mode="mesh" type="button">
+              <span class="mode-icon mesh-icon"></span> Mesh
+            </button>
+            <button class="mode" data-mode="field" type="button">
+              <span class="mode-icon field-icon"></span> Field
+            </button>
+            <button class="mode" data-mode="residual" type="button">
+              <span class="mode-icon residual-icon"></span> Residual
+            </button>
+          </div>
+          <div class="solver-pill">
+            <span class="pulse"></span>
+            <div><b>LIVE</b><small>Δ² relaxation</small></div>
+          </div>
+        </div>
+
+        <div class="canvas-card">
+          <canvas id="main-canvas" aria-label="带孔多边形上的双调和权重与变形网格"></canvas>
+          <div class="canvas-overlay top-left">
+            <span class="overlay-label">Ω / REST + DISPLACEMENT</span>
+            <div class="legend-row">
+              <span class="legend-swatch" id="legend-swatch"></span>
+              <span id="legend-label">mesh lines</span>
+            </div>
+          </div>
+          <div class="canvas-overlay top-right">
+            <span class="coordinate" id="cursor-coordinate">u 0.000 · v 0.000</span>
+          </div>
+          <div class="canvas-overlay bottom-left">
+            <span class="drag-hint">
+              <svg viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <path d="M9 2v14M2 9h14M9 2 6.8 4.2M9 2l2.2 2.2M16 9l-2.2-2.2M16 9l-2.2 2.2" stroke="currentColor" stroke-width="1.2"/>
+              </svg>
+              Drag a control handle to deform
+            </span>
+          </div>
+          <div class="void-callout" id="void-callout">
+            <span>VOID</span>
+            <small>no samples · no flux path</small>
+          </div>
+        </div>
+
+        <div class="field-bank">
+          <div class="bank-head">
+            <div>
+              <span class="eyebrow">INFLUENCE FIELDS / INDIVIDUAL ψ</span>
+              <p>Each panel is a separately solved scalar field. Click to inspect.</p>
+            </div>
+            <span class="bank-note">0 → 1 · smooth · Σ = 1</span>
+          </div>
+          <div class="field-grid" id="field-grid"></div>
+        </div>
+      </section>
+
+      <aside class="inspector panel">
+        <div class="inspector-head">
+          <div>
+            <span class="eyebrow">SELECTED HANDLE</span>
+            <h2 id="handle-name">D / near-void</h2>
+          </div>
+          <span class="handle-chip" id="handle-chip">D</span>
+        </div>
+
+        <div class="handle-readout">
+          <div>
+            <span>REST POSITION</span>
+            <b id="handle-position">0.705, 0.500</b>
+          </div>
+          <div>
+            <span>DISPLACEMENT</span>
+            <b id="handle-displacement">+0.000, +0.000</b>
+          </div>
+        </div>
+
+        <div class="weight-readout">
+          <div class="weight-readout-head">
+            <span>FIELD RANGE</span>
+            <b id="field-range">0.000 — 0.999</b>
+          </div>
+          <div class="range-track">
+            <span class="range-fill" id="range-fill"></span>
+            <span class="range-min" id="range-min">0</span>
+            <span class="range-max" id="range-max">1</span>
+          </div>
+        </div>
+
+        <div class="panel-heading compact">
+          <span class="section-index">04</span>
+          <div>
+            <h2>Optimality</h2>
+            <p>Residuals at the latest solve</p>
+          </div>
+        </div>
+
+        <div class="residual-list">
+          <div class="residual-row">
+            <div class="residual-label"><span>Δ² PDE residual</span><b id="res-pde">—</b></div>
+            <div class="meter"><span id="bar-pde" style="width:0%"></span></div>
+          </div>
+          <div class="residual-row">
+            <div class="residual-label"><span>Dirichlet mismatch</span><b id="res-dirichlet">—</b></div>
+            <div class="meter"><span id="bar-dirichlet" style="width:0%"></span></div>
+          </div>
+          <div class="residual-row">
+            <div class="residual-label"><span>Partition error</span><b id="res-partition">—</b></div>
+            <div class="meter"><span id="bar-partition" style="width:0%"></span></div>
+          </div>
+          <div class="residual-row">
+            <div class="residual-label"><span>Projected KKT residual</span><b id="res-kkt">—</b></div>
+            <div class="meter"><span id="bar-kkt" style="width:0%"></span></div>
+          </div>
+        </div>
+
+        <div class="solve-card">
+          <div class="solve-card-head">
+            <span>METHOD</span>
+            <span class="method-badge">masked 13-point</span>
+          </div>
+          <p>Minimise <code>Σ ∫<sub>Ω</sub> |Δw<sub>i</sub>|² dA</code> on the polygon sample graph. Void nodes are removed from the stencil, so support must travel around the hole.</p>
+          <div class="solve-meta">
+            <span><b id="iterations">—</b> relaxation steps</span>
+            <span><b id="solve-time">—</b> ms</span>
+          </div>
+        </div>
+
+        <div class="optimization-note">
+          <span class="eyebrow">WHY THIS IS NOT DISTANCE WEIGHTS</span>
+          <p>Geodesic distance only seeds the iteration. The displayed field is the projected minimiser of the biharmonic energy; straight segments crossing the void are never evaluated.</p>
+        </div>
+
+        <div class="bypass-panel" id="bypass-panel">
+          <div class="bypass-head">
+            <span class="eyebrow">VOID BYPASS PROBE</span>
+            <span class="probe-badge">N / ψD</span>
+          </div>
+          <div class="bypass-body">
+            <svg viewBox="0 0 84 64" fill="none" aria-hidden="true">
+              <path d="m12 19 29-12 29 13 7 21-23 17-31-7-11-17z" stroke="currentColor" stroke-width=".8"/>
+              <path d="m38 23 18-5 12 10 3 14-14 10-19-4-9-12z" fill="url(#bypass-hatch)" stroke="currentColor" stroke-width=".7"/>
+              <path class="bypass-route" d="M68 21C66 8 47 5 35 12" stroke="currentColor" stroke-width="1.3" stroke-dasharray="2 2"/>
+              <circle cx="68" cy="21" r="3" fill="#3e9b7d"/>
+              <circle cx="35" cy="12" r="2.4" stroke="#3e9b7d" stroke-width="1.2"/>
+              <defs>
+                <pattern id="bypass-hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+                  <line x1="0" y1="0" x2="0" y2="4" stroke="currentColor" stroke-width=".55"/>
+                </pattern>
+              </defs>
+            </svg>
+            <div>
+              <span>ψ<sub>D</sub> across void</span>
+              <b id="bypass-value">—</b>
+              <small>north loop · valid samples only</small>
+            </div>
+          </div>
+          <p>Probe sits on the far side of V. Its support arrives around the hole; the straight chord is outside Ω and contributes nothing.</p>
+        </div>
+
+        <div class="inspector-footer">
+          <span id="solve-stamp">solved just now</span>
+          <span class="footer-badge">float32</span>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal-backdrop" id="modal" hidden>
+    <section class="method-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" type="button" aria-label="关闭">×</button>
+      <span class="eyebrow">NUMERICAL NOTES / 006</span>
+      <h2 id="modal-title">What is being solved?</h2>
+      <p class="modal-lead">The editor computes bounded, partition-of-unity biharmonic influence fields on the polygon minus its interior void.</p>
+      <div class="method-steps">
+        <div><span>01</span><p>The domain is sampled on a Cartesian lattice. Lattice points inside the void are discarded; they cannot contribute a stencil value.</p></div>
+        <div><span>02</span><p>A masked 13-point finite-difference Δ² operator acts only on valid samples. Free boundaries use zero normal flux.</p></div>
+        <div><span>03</span><p>Each handle imposes a Dirichlet column. At every free sample the four weights are projected onto the simplex and box to enforce bounds and Σw = 1.</p></div>
+        <div><span>04</span><p>Residuals audit the actual displayed field. A coincident-handle or out-of-domain constraint is infeasible and is reported instead of being relaxed silently.</p></div>
+      </div>
+      <button class="text-button modal-done" id="modal-done" type="button">Back to canvas</button>
+    </section>
+  </div>
+
+  <script src="solver.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

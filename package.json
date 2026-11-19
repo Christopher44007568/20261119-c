@@ -1,0 +1,9 @@
+{
+  "name": "biharmonic-field-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive bounded biharmonic weight editor on a 2D domain with a void",
+  "scripts": {
+    "test": "node --test"
+  }
+}
