@@ -1,0 +1,96 @@
+:root {
+  --bg: #0e1218;
+  --panel: #161c26;
+  --line: #26303d;
+  --text: #e6ecf3;
+  --muted: #93a1b2;
+  --accent: #6db3ff;
+  --warn: #ffb86b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.5 -apple-system, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+}
+
+header { padding: 16px 20px 8px; }
+h1 { margin: 0; font-size: 18px; }
+h2 { font-size: 14px; margin: 14px 0 8px; }
+h3 { font-size: 12px; margin: 12px 0 6px; color: var(--muted); }
+.hint { color: var(--muted); margin-top: 4px; }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  padding: 10px 20px;
+  background: var(--panel);
+  border-block: 1px solid var(--line);
+}
+.controls label { display: flex; align-items: center; gap: 6px; }
+.controls span { color: var(--accent); min-width: 42px; }
+.controls .check { gap: 4px; }
+button {
+  background: #22303f;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+
+.grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 16px;
+  padding: 16px 20px;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-width: 0;
+}
+
+table { border-collapse: collapse; width: 100%; }
+td { padding: 3px 6px; border-bottom: 1px solid var(--line); }
+td:first-child { color: var(--muted); }
+td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+canvas { background: #0a0d12; border-radius: 6px; max-width: 100%; }
+.views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+figure { margin: 0; }
+figcaption { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+.views canvas {
+  width: 320px;
+  height: 200px;
+  image-rendering: pixelated;
+}
+
+.log {
+  height: 150px;
+  overflow-y: auto;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 11px;
+  background: #0a0d12;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+.log div { color: var(--warn); white-space: nowrap; }
+.note { color: var(--muted); margin-top: 6px; font-size: 12px; }
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "particle-bucket-sort",
+  "version": "1.0.0",
+  "private": true,
+  "description": "数千个半透明粒子的分桶深度排序可视化：以 CPU 全排序为参照逐像素比较透明混合色差",
+  "scripts": {
+    "test": "node test/engine.test.js && node test/app.smoke.test.js",
+    "serve": "node serve.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

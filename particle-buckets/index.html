@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>半透明粒子分桶深度排序 · 色差对照</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>半透明粒子 · 分桶深度排序 vs CPU 全排序</h1>
+    <div class="hint">软件像素混合逐帧比对，关注透明混合差异而非仅平均帧率</div>
+  </header>
+
+  <section class="controls">
+    <label>粒子数
+      <input id="count" type="range" min="500" max="6000" step="100" value="3000">
+      <span id="countVal">3000</span>
+    </label>
+    <label>桶数
+      <input id="buckets" type="range" min="2" max="128" step="1" value="16">
+      <span id="bucketsVal">16</span>
+    </label>
+    <label>EMA 平滑 τ(s)
+      <input id="tau" type="range" min="0" max="0.6" step="0.01" value="0.12">
+      <span id="tauVal">0.12</span>
+    </label>
+    <label>迟滞 margin
+      <input id="hyst" type="range" min="0" max="0.08" step="0.005" value="0.02">
+      <span id="hystVal">0.020</span>
+    </label>
+    <label class="check"><input id="smoothing" type="checkbox" checked> 平滑+迟滞</label>
+    <button id="pause">暂停</button>
+    <button id="sweep">重新扫描桶数</button>
+  </section>
+
+  <main class="grid">
+    <section class="panel">
+      <h2>实时指标</h2>
+      <table id="hud"></table>
+      <h3>每桶粒子数（当前 <span id="bucketNo"></span> 桶）</h3>
+      <canvas id="bucketCanvas" width="560" height="130"></canvas>
+      <h3>最近跨桶迁移</h3>
+      <div id="migrationLog" class="log"></div>
+    </section>
+
+    <section class="panel">
+      <h2>渲染视图（320×200 软件帧缓冲）</h2>
+      <div class="views">
+        <figure>
+          <figcaption>参照：CPU 全排序</figcaption>
+          <canvas id="refCanvas" width="320" height="200"></canvas>
+        </figure>
+        <figure>
+          <figcaption>分桶排序（迁移粒子高亮为白色）</figcaption>
+          <canvas id="testCanvas" width="320" height="200"></canvas>
+        </figure>
+        <figure>
+          <figcaption>逐像素色差热图（放大 4×）</figcaption>
+          <canvas id="diffCanvas" width="320" height="200"></canvas>
+        </figure>
+      </div>
+      <h2>桶数 → 颜色误差扫描</h2>
+      <canvas id="sweepCanvas" width="720" height="220"></canvas>
+      <div id="sweepNote" class="note"></div>
+    </section>
+  </main>
+
+  <script src="src/simulation.js"></script>
+  <script src="src/sort.js"></script>
+  <script src="src/framebuffer.js"></script>
+  <script src="src/engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
