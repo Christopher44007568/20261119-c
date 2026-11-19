@@ -1,0 +1,33 @@
+{
+  "surface": "cylinder",
+  "curvature_mae": 0.008649,
+  "curvature_max": 0.107954,
+  "direction_median_deg": 0.0,
+  "direction_p90_deg": 0.0,
+  "direction_max_deg": 17.0637,
+  "confident_fraction": 1.0,
+  "fallback_fraction": 0.0,
+  "n_vertices": 1536,
+  "n_faces": 2976,
+  "n_streamlines": 392,
+  "length_stats": {
+    "count": 392.0,
+    "min": 1.9260233733277003,
+    "p25": 1.9595035908725946,
+    "median": 1.97003235860792,
+    "p75": 1.9819716568591303,
+    "p90": 1.9932620879198732,
+    "max": 2.0042834675347154,
+    "mean": 1.970923612806512,
+    "total": 772.6020562201527
+  },
+  "attachment_residual_max": 0.00214108,
+  "n_breaks": 784,
+  "fallback_vertices": 0,
+  "singularity_vertices": 0,
+  "layer_line_counts": [
+    0,
+    173,
+    219
+  ]
+}

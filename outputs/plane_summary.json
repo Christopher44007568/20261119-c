@@ -1,0 +1,33 @@
+{
+  "surface": "plane",
+  "curvature_mae": 0.0,
+  "curvature_max": 0.0,
+  "direction_median_deg": NaN,
+  "direction_p90_deg": NaN,
+  "direction_max_deg": NaN,
+  "confident_fraction": 0.0,
+  "fallback_fraction": 1.0,
+  "n_vertices": 1024,
+  "n_faces": 1922,
+  "n_streamlines": 55,
+  "length_stats": {
+    "count": 55.0,
+    "min": 0.07791908392020663,
+    "p25": 0.16151979096630908,
+    "median": 0.1628074688973803,
+    "p75": 0.16438007212631423,
+    "p90": 0.17576739493416538,
+    "max": 0.1905410194262815,
+    "mean": 0.15680114639684745,
+    "total": 8.62406305182661
+  },
+  "attachment_residual_max": 0.0,
+  "n_breaks": 110,
+  "fallback_vertices": 1024,
+  "singularity_vertices": 0,
+  "layer_line_counts": [
+    55,
+    0,
+    0
+  ]
+}

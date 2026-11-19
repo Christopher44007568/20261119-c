@@ -1,0 +1,33 @@
+{
+  "surface": "saddle",
+  "curvature_mae": 0.040245,
+  "curvature_max": 0.429571,
+  "direction_median_deg": 1.8667,
+  "direction_p90_deg": 5.1083,
+  "direction_max_deg": 11.3959,
+  "confident_fraction": 0.9835,
+  "fallback_fraction": 0.0165,
+  "n_vertices": 2304,
+  "n_faces": 4418,
+  "n_streamlines": 127,
+  "length_stats": {
+    "count": 127.0,
+    "min": 0.07977294070657502,
+    "p25": 1.5669421387906795,
+    "median": 2.4034399605207883,
+    "p75": 3.1362593623351485,
+    "p90": 3.5790815357921093,
+    "max": 3.8632820011243876,
+    "mean": 2.3073809744497096,
+    "total": 293.0373837551131
+  },
+  "attachment_residual_max": 0.00034996,
+  "n_breaks": 254,
+  "fallback_vertices": 38,
+  "singularity_vertices": 0,
+  "layer_line_counts": [
+    31,
+    51,
+    45
+  ]
+}

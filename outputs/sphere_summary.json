@@ -1,0 +1,33 @@
+{
+  "surface": "sphere",
+  "curvature_mae": 0.018578,
+  "curvature_max": 0.181676,
+  "direction_median_deg": NaN,
+  "direction_p90_deg": NaN,
+  "direction_max_deg": NaN,
+  "confident_fraction": 0.0,
+  "fallback_fraction": 1.0,
+  "n_vertices": 1986,
+  "n_faces": 3968,
+  "n_streamlines": 332,
+  "length_stats": {
+    "count": 332.0,
+    "min": 0.14911333795746531,
+    "p25": 0.22598270070465365,
+    "median": 0.23181449284002997,
+    "p75": 0.24607178118700287,
+    "p90": 0.25945629939341874,
+    "max": 0.28018890076221553,
+    "mean": 0.23383863165874902,
+    "total": 77.63442571070468
+  },
+  "attachment_residual_max": 0.00236332,
+  "n_breaks": 664,
+  "fallback_vertices": 1986,
+  "singularity_vertices": 0,
+  "layer_line_counts": [
+    45,
+    91,
+    196
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "cylinder": {
+    "surface": "cylinder",
+    "curvature_mae": 0.008649,
+    "curvature_max": 0.107954,
+    "direction_median_deg": 0.0,
+    "direction_p90_deg": 0.0,
+    "direction_max_deg": 17.0637,
+    "confident_fraction": 1.0,
+    "fallback_fraction": 0.0,
+    "n_vertices": 1536,
+    "n_faces": 2976,
+    "n_streamlines": 392,
+    "length_stats": {
+      "count": 392.0,
+      "min": 1.9260233733277003,
+      "p25": 1.9595035908725946,
+      "median": 1.97003235860792,
+      "p75": 1.9819716568591303,
+      "p90": 1.9932620879198732,
+      "max": 2.0042834675347154,
+      "mean": 1.970923612806512,
+      "total": 772.6020562201527
+    },
+    "attachment_residual_max": 0.00214108,
+    "n_breaks": 784,
+    "fallback_vertices": 0,
+    "singularity_vertices": 0,
+    "layer_line_counts": [
+      0,
+      173,
+      219
+    ]
+  },
+  "sphere": {
+    "surface": "sphere",
+    "curvature_mae": 0.018578,
+    "curvature_max": 0.181676,
+    "direction_median_deg": NaN,
+    "direction_p90_deg": NaN,
+    "direction_max_deg": NaN,
+    "confident_fraction": 0.0,
+    "fallback_fraction": 1.0,
+    "n_vertices": 1986,
+    "n_faces": 3968,
+    "n_streamlines": 332,
+    "length_stats": {
+      "count": 332.0,
+      "min": 0.14911333795746531,
+      "p25": 0.22598270070465365,
+      "median": 0.23181449284002997,
+      "p75": 0.24607178118700287,
+      "p90": 0.25945629939341874,
+      "max": 0.28018890076221553,
+      "mean": 0.23383863165874902,
+      "total": 77.63442571070468
+    },
+    "attachment_residual_max": 0.00236332,
+    "n_breaks": 664,
+    "fallback_vertices": 1986,
+    "singularity_vertices": 0,
+    "layer_line_counts": [
+      45,
+      91,
+      196
+    ]
+  },
+  "saddle": {
+    "surface": "saddle",
+    "curvature_mae": 0.040245,
+    "curvature_max": 0.429571,
+    "direction_median_deg": 1.8667,
+    "direction_p90_deg": 5.1083,
+    "direction_max_deg": 11.3959,
+    "confident_fraction": 0.9835,
+    "fallback_fraction": 0.0165,
+    "n_vertices": 2304,
+    "n_faces": 4418,
+    "n_streamlines": 127,
+    "length_stats": {
+      "count": 127.0,
+      "min": 0.07977294070657502,
+      "p25": 1.5669421387906795,
+      "median": 2.4034399605207883,
+      "p75": 3.1362593623351485,
+      "p90": 3.5790815357921093,
+      "max": 3.8632820011243876,
+      "mean": 2.3073809744497096,
+      "total": 293.0373837551131
+    },
+    "attachment_residual_max": 0.00034996,
+    "n_breaks": 254,
+    "fallback_vertices": 38,
+    "singularity_vertices": 0,
+    "layer_line_counts": [
+      31,
+      51,
+      45
+    ]
+  },
+  "plane": {
+    "surface": "plane",
+    "curvature_mae": 0.0,
+    "curvature_max": 0.0,
+    "direction_median_deg": NaN,
+    "direction_p90_deg": NaN,
+    "direction_max_deg": NaN,
+    "confident_fraction": 0.0,
+    "fallback_fraction": 1.0,
+    "n_vertices": 1024,
+    "n_faces": 1922,
+    "n_streamlines": 55,
+    "length_stats": {
+      "count": 55.0,
+      "min": 0.07791908392020663,
+      "p25": 0.16151979096630908,
+      "median": 0.1628074688973803,
+      "p75": 0.16438007212631423,
+      "p90": 0.17576739493416538,
+      "max": 0.1905410194262815,
+      "mean": 0.15680114639684745,
+      "total": 8.62406305182661
+    },
+    "attachment_residual_max": 0.0,
+    "n_breaks": 110,
+    "fallback_vertices": 1024,
+    "singularity_vertices": 0,
+    "layer_line_counts": [
+      55,
+      0,
+      0
+    ]
+  }
+}
