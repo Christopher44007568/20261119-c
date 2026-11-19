@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="高模到低模的切线空间法线烘焙实验台：包围笼与最近表面投射、诊断掩码、镜像 UV 与笼穿透处理。"
+    />
+    <title>NORMAL FORGE · 高模法线烘焙台</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-noise" aria-hidden="true"></div>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span class="brand-axis brand-axis-x"></span>
+            <span class="brand-axis brand-axis-y"></span>
+            <span class="brand-axis brand-axis-z"></span>
+          </div>
+          <div>
+            <div class="eyebrow">NORMAL FORGE / BAKE EXPERIMENT 07</div>
+            <h1>高模法线烘焙台</h1>
+          </div>
+        </div>
+        <div class="system-strip" aria-label="系统参数">
+          <span class="live-pill"><i></i>CPU RAYCAST</span>
+          <span>TANGENT SPACE</span>
+          <span>OPENGL +Y</span>
+          <span id="headerResolution">384 × 384</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="stage-panel">
+          <div class="stage-head">
+            <div>
+              <div class="eyebrow">REPROJECTION VIEW</div>
+              <h2>高模法线 / 低模回贴</h2>
+            </div>
+            <div class="stage-actions">
+              <div class="view-tabs" id="viewTabs" role="group" aria-label="三维视图模式">
+                <button class="view-tab is-active" data-view="normal">法线对照</button>
+                <button class="view-tab" data-view="lit">光照对照</button>
+                <button class="view-tab" data-view="error">误差热图</button>
+              </div>
+              <button class="icon-button" id="resetViewBtn" title="重置视角" aria-label="重置视角">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M4.7 6.2A6.5 6.5 0 1 1 3.5 10" />
+                  <path d="M4.7 2.9v3.6H1.2" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="compare-frame">
+            <canvas
+              id="compareCanvas"
+              tabindex="0"
+              aria-label="左侧高模法线，右侧低模回贴法线；拖动旋转，滚轮缩放"
+            ></canvas>
+            <div class="pane-label pane-label-high">
+              <span class="pane-index">A</span>
+              <span><b>HIGH</b> 高模源法线</span>
+              <span class="pane-stat" id="highTriangleStat">4.5K TRI</span>
+            </div>
+            <div class="pane-label pane-label-low">
+              <span class="pane-index pane-index-low">B</span>
+              <span><b>LOW</b> 烘焙法线回贴</span>
+              <span class="pane-stat" id="lowTriangleStat">192 TRI</span>
+            </div>
+            <div class="compare-divider" aria-hidden="true">
+              <span></span><i></i><span></span>
+            </div>
+            <div class="compare-corner" aria-hidden="true">
+              <span id="cameraYaw">YAW 00°</span>
+              <span id="cameraPitch">PITCH 08°</span>
+            </div>
+            <div class="compare-hint">拖动旋转 <span>·</span> 滚轮缩放 <span>·</span> 双击复位</div>
+            <div class="bake-busy" id="bakeBusy" hidden>
+              <span class="busy-ring"></span>
+              <b>正在投射</b>
+              <span id="busyText">384² texels</span>
+            </div>
+          </div>
+
+          <div class="stage-bottom">
+            <div class="normal-legend" aria-label="法线颜色图例">
+              <span class="legend-title">WORLD NORMAL</span>
+              <span><i class="swatch swatch-x"></i>+X</span>
+              <span><i class="swatch swatch-y"></i>+Y</span>
+              <span><i class="swatch swatch-z"></i>+Z</span>
+              <span class="legend-sep"></span>
+              <button class="overlay-toggle is-on" data-stage-overlay="seams">UV 接缝</button>
+              <button class="overlay-toggle" data-stage-overlay="cage">包围笼</button>
+            </div>
+            <div class="stage-readout">
+              <span id="renderModeReadout">NORMAL RECONSTRUCTION</span>
+              <strong id="renderTime">-- ms</strong>
+            </div>
+          </div>
+
+          <div class="metrics" aria-label="烘焙统计">
+            <div class="metric">
+              <span class="metric-label">HIT RATE</span>
+              <strong id="statHitRate">--</strong>
+              <span class="metric-note" id="statHitNote">-- / -- texels</span>
+            </div>
+            <div class="metric metric-warn">
+              <span class="metric-label">MISS → NEUTRAL</span>
+              <strong id="statMiss">--</strong>
+              <span class="metric-note">128 / 128 / 255</span>
+            </div>
+            <div class="metric metric-alert">
+              <span class="metric-label">FALSE HIT</span>
+              <strong id="statFalse">--</strong>
+              <span class="metric-note">out-of-cage / backface</span>
+            </div>
+            <div class="metric metric-cage">
+              <span class="metric-label">CAGE PENETRATION</span>
+              <strong id="statPenetration">--</strong>
+              <span class="metric-note" id="statRepairNote">-- repaired</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">MEAN ANGLE</span>
+              <strong id="statError">--</strong>
+              <span class="metric-note">decoded vs high</span>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="panel bake-panel">
+            <div class="panel-title">
+              <span><b>01</b> BAKE SETUP</span>
+              <span class="tool-state" id="bakeState"><i></i>READY</span>
+            </div>
+
+            <div class="field-group">
+              <div class="field-head">
+                <label>目标纹理</label>
+                <span id="resolutionReadout">384 × 384</span>
+              </div>
+              <div class="segmented" id="resolutionControl" role="group" aria-label="目标纹理分辨率">
+                <button data-resolution="256">256</button>
+                <button class="is-active" data-resolution="384">384</button>
+                <button data-resolution="512">512</button>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="field-head">
+                <label>投射方式</label>
+                <span id="projectionHint">沿笼面法线向内</span>
+              </div>
+              <div class="segmented segmented-projection" id="projectionControl" role="group" aria-label="投射方式">
+                <button class="is-active" data-projection="cage">包围笼</button>
+                <button data-projection="nearest">最近表面</button>
+              </div>
+            </div>
+
+            <div class="field-group cage-field" id="cageField">
+              <div class="field-head">
+                <label for="cageRange">笼偏移距离</label>
+                <span id="cageReadout">0.110</span>
+              </div>
+              <input id="cageRange" type="range" min="0.04" max="0.22" step="0.005" value="0.11" />
+              <div class="range-labels"><span>0.04</span><span>0.13</span><span>0.22</span></div>
+            </div>
+
+            <div class="switch-list">
+              <label class="switch-row">
+                <span>
+                  <b>镜像 UV 副切线校正</b>
+                  <small>按岛应用 handedness = −1</small>
+                </span>
+                <input id="mirrorToggle" type="checkbox" checked />
+                <i class="switch-ui" aria-hidden="true"></i>
+              </label>
+              <label class="switch-row">
+                <span>
+                  <b>笼穿透局部回退</b>
+                  <small>仅穿透 texel 改用最近表面</small>
+                </span>
+                <input id="repairToggle" type="checkbox" checked />
+                <i class="switch-ui" aria-hidden="true"></i>
+              </label>
+            </div>
+
+            <div class="action-row">
+              <button class="action-button" id="bakeBtn">
+                <span>重新烘焙</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" /></svg>
+              </button>
+              <button class="action-button action-secondary" id="exportBtn">导出 PNG</button>
+            </div>
+            <div class="bake-rule">
+              <span>MISS</span>
+              <code>N = (0, 0, 1)</code>
+              <span>→ RGB</span>
+              <code>128, 128, 255</code>
+            </div>
+          </section>
+
+          <section class="panel validation-panel">
+            <div class="panel-title">
+              <span><b>02</b> TANGENT CHECK</span>
+              <span class="pass-badge" id="validationBadge">PASS</span>
+            </div>
+            <div class="tbn-strip">
+              <div class="tbn-gizmo" aria-hidden="true">
+                <span class="axis axis-n">N</span>
+                <span class="axis axis-t">T</span>
+                <span class="axis axis-b">B</span>
+                <i></i>
+              </div>
+              <div class="tbn-copy">
+                <b>已知斜率高/低模对</b>
+                <span>高模法线在低模 TBN 中编码，再解码回世界空间。</span>
+              </div>
+              <div class="tbn-rgb" id="tbnRgb">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <div class="verify-list" id="validationList"></div>
+            <div class="validation-foot">
+              <span id="validationSummary">等待烘焙结果</span>
+              <span class="mono" id="validationAngle">Δ 0.00°</span>
+            </div>
+          </section>
+        </aside>
+
+        <section class="texture-panel">
+          <div class="panel-title texture-title">
+            <span><b>03</b> BAKED TEXTURE</span>
+            <span class="tool-state"><i></i><span id="textureMeta">TANGENT / RGBA8</span></span>
+          </div>
+          <div class="texture-body">
+            <div class="texture-stage">
+              <div class="texture-canvas-wrap">
+                <canvas id="textureCanvas" width="384" height="384" aria-label="烘焙后的切线空间法线贴图"></canvas>
+                <div class="texture-axis texture-axis-u">U</div>
+                <div class="texture-axis texture-axis-v">V</div>
+                <div class="island-tag island-tag-l">ISLAND L / +U</div>
+                <div class="island-tag island-tag-r">ISLAND R / MIRRORED U</div>
+              </div>
+              <div class="texture-tools">
+                <button class="overlay-toggle is-on" data-texture-overlay="seam">黄色接缝</button>
+                <button class="overlay-toggle" data-texture-overlay="miss">未命中</button>
+                <button class="overlay-toggle" data-texture-overlay="false">误命中</button>
+                <button class="overlay-toggle" data-texture-overlay="penetration">笼穿透</button>
+                <button class="overlay-toggle" data-texture-overlay="mirror">镜像岛</button>
+              </div>
+            </div>
+            <div class="texture-info">
+              <div class="texture-meta-grid">
+                <div><span>格式</span><b>RGBA8 / LINEAR</b></div>
+                <div><span>UV 覆盖</span><b id="uvCoverage">--</b></div>
+                <div><span>接缝像素</span><b id="seamCount">--</b></div>
+                <div><span>回贴误差 P95</span><b id="errorP95">--</b></div>
+              </div>
+              <div class="mask-heading">
+                <span>DIAGNOSTIC MASKS</span>
+                <span>像素投影</span>
+              </div>
+              <div class="mask-grid" id="maskGrid">
+                <figure class="mask-card" data-mask-card="miss">
+                  <canvas width="96" height="96" aria-label="射线未命中掩码"></canvas>
+                  <figcaption><i class="mask-dot dot-miss"></i><span>未命中</span><b>0</b></figcaption>
+                </figure>
+                <figure class="mask-card" data-mask-card="false">
+                  <canvas width="96" height="96" aria-label="误命中掩码"></canvas>
+                  <figcaption><i class="mask-dot dot-false"></i><span>误命中</span><b>0</b></figcaption>
+                </figure>
+                <figure class="mask-card" data-mask-card="penetration">
+                  <canvas width="96" height="96" aria-label="包围笼穿透掩码"></canvas>
+                  <figcaption><i class="mask-dot dot-penetration"></i><span>笼穿透</span><b>0</b></figcaption>
+                </figure>
+                <figure class="mask-card" data-mask-card="mirror">
+                  <canvas width="96" height="96" aria-label="镜像 UV 岛掩码"></canvas>
+                  <figcaption><i class="mask-dot dot-mirror"></i><span>镜像 UV</span><b>R</b></figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>RAYCAST → TBN ENCODE → RGBA8 → LOW-POLY RESAMPLE</span>
+        <span id="footerStatus">384 × 384 · CAGE 0.110 · OPENGL +Y</span>
+      </footer>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
