@@ -1,0 +1,14 @@
+{
+  "name": "volume-box-select",
+  "version": "1.0.0",
+  "description": "三维鼠标框选工具：屏幕矩形 -> 选择体（平截头体/正交体），完全包含与相交两种规则，独立几何判定交叉验证",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/",
+    "serve": "node tools/serve.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

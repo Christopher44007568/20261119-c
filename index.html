@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>三维鼠标框选工具 · 体积选择</title>
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --panel: #151b26;
+      --line: #263044;
+      --text: #d6deeb;
+      --muted: #7d8aa3;
+      --accent: #7fe0ff;
+      --warn: #ff9f43;
+      --sel: #ffe66d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.5 "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      display: grid;
+      grid-template-columns: auto 380px;
+      gap: 14px;
+      padding: 14px;
+    }
+    h1 { font-size: 16px; margin: 0 0 8px; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .toolbar label { white-space: nowrap; }
+    canvas {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      touch-action: none;
+      cursor: crosshair;
+      display: block;
+    }
+    aside {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-y: auto;
+      max-height: calc(100vh - 28px);
+    }
+    aside h2 { font-size: 14px; margin: 12px 0 6px; color: var(--accent); }
+    table { border-collapse: collapse; width: 100%; font-size: 12px; }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 4px 6px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th { color: var(--muted); font-weight: 600; }
+    .planes td, .planes th { padding: 2px 5px; }
+    .reason { color: #aeb9cc; max-width: 230px; }
+    .muted { color: var(--muted); }
+    .agree { color: #8be28b; }
+    .disagree { color: #ff7b7b; font-weight: 700; }
+    tr.row-sel td { background: rgba(255, 230, 109, 0.12); }
+    #summary {
+      position: sticky;
+      top: -12px;
+      background: var(--panel);
+      padding: 6px 0;
+      font-weight: 700;
+      color: var(--sel);
+      border-bottom: 1px solid var(--line);
+    }
+    button, select {
+      background: #1d2637;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    button:hover { border-color: var(--accent); }
+    .hint { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>三维鼠标框选工具（真实体积选择，非颜色拾取）</h1>
+    <div class="toolbar">
+      <label>选择规则
+        <label><input type="radio" name="rule" value="intersect" checked /> 相交即选</label>
+        <label><input type="radio" name="rule" value="contain" /> 仅完全包含</label>
+      </label>
+      <label>相机
+        <select id="cameraMode">
+          <option value="perspective" selected>透视相机</option>
+          <option value="ortho">正交相机</option>
+        </select>
+      </label>
+      <label>测试场景
+        <select id="scenarioSelect">
+          <option value="reverse">反向拖框</option>
+          <option value="outside">视口外拖动（夹取）</option>
+          <option value="near">跨近平面对象</option>
+          <option value="overlap">前后重叠对象</option>
+        </select>
+      </label>
+      <button id="scenarioBtn">载入场景</button>
+      <button id="resetBtn">清除框选</button>
+    </div>
+    <canvas id="view"></canvas>
+    <p class="hint">
+      操作：在画布任意位置（含画布外，指针捕获生效）按住左键拖拽，支持向上/向左的反向拖框。
+      蓝色线框为屏幕矩形反投影得到的选择体，黄色描边为选中对象。
+    </p>
+  </main>
+  <aside>
+    <div id="summary">尚未框选</div>
+    <h2>选择体信息</h2>
+    <div id="volumeInfo"><span class="muted">在画布上按住左键拖出矩形即可生成选择体</span></div>
+    <h2>各对象判定理由</h2>
+    <table>
+      <thead>
+        <tr><th>对象</th><th>体积判定</th><th>独立 oracle</th><th>理由</th></tr>
+      </thead>
+      <tbody id="objectRows"></tbody>
+    </table>
+  </aside>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
