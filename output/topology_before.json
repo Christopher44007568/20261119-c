@@ -1,0 +1,461 @@
+{
+  "vertices": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": 1,
+      "x": 1.333333333,
+      "y": 0.0
+    },
+    {
+      "id": 2,
+      "x": 2.666666667,
+      "y": 0.0
+    },
+    {
+      "id": 3,
+      "x": 4,
+      "y": 0
+    },
+    {
+      "id": 4,
+      "x": 4,
+      "y": 3
+    },
+    {
+      "id": 5,
+      "x": 2.666666667,
+      "y": 3.0
+    },
+    {
+      "id": 6,
+      "x": 1.333333333,
+      "y": 3.0
+    },
+    {
+      "id": 7,
+      "x": 0,
+      "y": 3
+    }
+  ],
+  "edges": [
+    {
+      "id": 0,
+      "halfedges": [
+        0,
+        1
+      ],
+      "from": 0,
+      "to": 1,
+      "sources": [
+        0
+      ]
+    },
+    {
+      "id": 1,
+      "halfedges": [
+        2,
+        3
+      ],
+      "from": 1,
+      "to": 2,
+      "sources": [
+        0
+      ]
+    },
+    {
+      "id": 2,
+      "halfedges": [
+        4,
+        5
+      ],
+      "from": 2,
+      "to": 3,
+      "sources": [
+        0
+      ]
+    },
+    {
+      "id": 3,
+      "halfedges": [
+        6,
+        7
+      ],
+      "from": 3,
+      "to": 4,
+      "sources": [
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "halfedges": [
+        8,
+        9
+      ],
+      "from": 4,
+      "to": 5,
+      "sources": [
+        2
+      ]
+    },
+    {
+      "id": 5,
+      "halfedges": [
+        10,
+        11
+      ],
+      "from": 5,
+      "to": 6,
+      "sources": [
+        2
+      ]
+    },
+    {
+      "id": 6,
+      "halfedges": [
+        12,
+        13
+      ],
+      "from": 6,
+      "to": 7,
+      "sources": [
+        2
+      ]
+    },
+    {
+      "id": 7,
+      "halfedges": [
+        14,
+        15
+      ],
+      "from": 7,
+      "to": 0,
+      "sources": [
+        3
+      ]
+    },
+    {
+      "id": 8,
+      "halfedges": [
+        16,
+        17
+      ],
+      "from": 1,
+      "to": 6,
+      "sources": [
+        4
+      ]
+    },
+    {
+      "id": 9,
+      "halfedges": [
+        18,
+        19
+      ],
+      "from": 2,
+      "to": 5,
+      "sources": [
+        5
+      ]
+    }
+  ],
+  "halfedges": [
+    {
+      "id": 0,
+      "origin": 0,
+      "destination": 1,
+      "twin": 1,
+      "next": 16,
+      "face": 0,
+      "edge": 0
+    },
+    {
+      "id": 1,
+      "origin": 1,
+      "destination": 0,
+      "twin": 0,
+      "next": 15,
+      "face": 3,
+      "edge": 0
+    },
+    {
+      "id": 2,
+      "origin": 1,
+      "destination": 2,
+      "twin": 3,
+      "next": 18,
+      "face": 1,
+      "edge": 1
+    },
+    {
+      "id": 3,
+      "origin": 2,
+      "destination": 1,
+      "twin": 2,
+      "next": 1,
+      "face": 3,
+      "edge": 1
+    },
+    {
+      "id": 4,
+      "origin": 2,
+      "destination": 3,
+      "twin": 5,
+      "next": 6,
+      "face": 2,
+      "edge": 2
+    },
+    {
+      "id": 5,
+      "origin": 3,
+      "destination": 2,
+      "twin": 4,
+      "next": 3,
+      "face": 3,
+      "edge": 2
+    },
+    {
+      "id": 6,
+      "origin": 3,
+      "destination": 4,
+      "twin": 7,
+      "next": 8,
+      "face": 2,
+      "edge": 3
+    },
+    {
+      "id": 7,
+      "origin": 4,
+      "destination": 3,
+      "twin": 6,
+      "next": 5,
+      "face": 3,
+      "edge": 3
+    },
+    {
+      "id": 8,
+      "origin": 4,
+      "destination": 5,
+      "twin": 9,
+      "next": 19,
+      "face": 2,
+      "edge": 4
+    },
+    {
+      "id": 9,
+      "origin": 5,
+      "destination": 4,
+      "twin": 8,
+      "next": 7,
+      "face": 3,
+      "edge": 4
+    },
+    {
+      "id": 10,
+      "origin": 5,
+      "destination": 6,
+      "twin": 11,
+      "next": 17,
+      "face": 1,
+      "edge": 5
+    },
+    {
+      "id": 11,
+      "origin": 6,
+      "destination": 5,
+      "twin": 10,
+      "next": 9,
+      "face": 3,
+      "edge": 5
+    },
+    {
+      "id": 12,
+      "origin": 6,
+      "destination": 7,
+      "twin": 13,
+      "next": 14,
+      "face": 0,
+      "edge": 6
+    },
+    {
+      "id": 13,
+      "origin": 7,
+      "destination": 6,
+      "twin": 12,
+      "next": 11,
+      "face": 3,
+      "edge": 6
+    },
+    {
+      "id": 14,
+      "origin": 7,
+      "destination": 0,
+      "twin": 15,
+      "next": 0,
+      "face": 0,
+      "edge": 7
+    },
+    {
+      "id": 15,
+      "origin": 0,
+      "destination": 7,
+      "twin": 14,
+      "next": 13,
+      "face": 3,
+      "edge": 7
+    },
+    {
+      "id": 16,
+      "origin": 1,
+      "destination": 6,
+      "twin": 17,
+      "next": 12,
+      "face": 0,
+      "edge": 8
+    },
+    {
+      "id": 17,
+      "origin": 6,
+      "destination": 1,
+      "twin": 16,
+      "next": 2,
+      "face": 1,
+      "edge": 8
+    },
+    {
+      "id": 18,
+      "origin": 2,
+      "destination": 5,
+      "twin": 19,
+      "next": 10,
+      "face": 1,
+      "edge": 9
+    },
+    {
+      "id": 19,
+      "origin": 5,
+      "destination": 2,
+      "twin": 18,
+      "next": 4,
+      "face": 2,
+      "edge": 9
+    }
+  ],
+  "faces": [
+    {
+      "id": 0,
+      "bounded": true,
+      "area": 4.0,
+      "loops": [
+        {
+          "halfedges": [
+            0,
+            16,
+            12,
+            14
+          ],
+          "vertex_path": [
+            0,
+            1,
+            6,
+            7
+          ],
+          "signed_area": 4.0
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "bounded": true,
+      "area": 4.0,
+      "loops": [
+        {
+          "halfedges": [
+            2,
+            18,
+            10,
+            17
+          ],
+          "vertex_path": [
+            1,
+            2,
+            5,
+            6
+          ],
+          "signed_area": 4.0
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "bounded": true,
+      "area": 4.0,
+      "loops": [
+        {
+          "halfedges": [
+            4,
+            6,
+            8,
+            19
+          ],
+          "vertex_path": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "signed_area": 4.0
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "bounded": false,
+      "area": null,
+      "loops": [
+        {
+          "halfedges": [
+            1,
+            15,
+            13,
+            11,
+            9,
+            7,
+            5,
+            3
+          ],
+          "vertex_path": [
+            1,
+            0,
+            7,
+            6,
+            5,
+            4,
+            3,
+            2
+          ],
+          "signed_area": -12.0
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "ok": true,
+    "problems": [],
+    "vertices": 8,
+    "edges": 10,
+    "faces": 4,
+    "halfedges": 20,
+    "components": 1,
+    "euler_characteristic": 2,
+    "euler_expected": 2,
+    "total_bounded_area": 12.0,
+    "bridge_edges": [],
+    "algebraic_area_sum": 0.0,
+    "area_tolerance": 1e-09
+  }
+}

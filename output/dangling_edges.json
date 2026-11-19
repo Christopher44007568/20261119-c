@@ -1,0 +1,291 @@
+{
+  "vertices": [
+    {
+      "id": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": 1,
+      "x": 4,
+      "y": 0
+    },
+    {
+      "id": 2,
+      "x": 2,
+      "y": 3
+    },
+    {
+      "id": 3,
+      "x": -1.5,
+      "y": -1.2
+    },
+    {
+      "id": 4,
+      "x": 5.5,
+      "y": 1.0
+    },
+    {
+      "id": 5,
+      "x": -2.2,
+      "y": -0.4
+    }
+  ],
+  "edges": [
+    {
+      "id": 0,
+      "halfedges": [
+        0,
+        1
+      ],
+      "from": 0,
+      "to": 1,
+      "sources": [
+        0
+      ]
+    },
+    {
+      "id": 1,
+      "halfedges": [
+        2,
+        3
+      ],
+      "from": 1,
+      "to": 2,
+      "sources": [
+        1
+      ]
+    },
+    {
+      "id": 2,
+      "halfedges": [
+        4,
+        5
+      ],
+      "from": 2,
+      "to": 0,
+      "sources": [
+        2
+      ]
+    },
+    {
+      "id": 3,
+      "halfedges": [
+        6,
+        7
+      ],
+      "from": 0,
+      "to": 3,
+      "sources": [
+        3
+      ]
+    },
+    {
+      "id": 4,
+      "halfedges": [
+        8,
+        9
+      ],
+      "from": 1,
+      "to": 4,
+      "sources": [
+        4
+      ]
+    },
+    {
+      "id": 5,
+      "halfedges": [
+        10,
+        11
+      ],
+      "from": 3,
+      "to": 5,
+      "sources": [
+        5
+      ]
+    }
+  ],
+  "halfedges": [
+    {
+      "id": 0,
+      "origin": 0,
+      "destination": 1,
+      "twin": 1,
+      "next": 2,
+      "face": 0,
+      "edge": 0
+    },
+    {
+      "id": 1,
+      "origin": 1,
+      "destination": 0,
+      "twin": 0,
+      "next": 6,
+      "face": 1,
+      "edge": 0
+    },
+    {
+      "id": 2,
+      "origin": 1,
+      "destination": 2,
+      "twin": 3,
+      "next": 4,
+      "face": 0,
+      "edge": 1
+    },
+    {
+      "id": 3,
+      "origin": 2,
+      "destination": 1,
+      "twin": 2,
+      "next": 8,
+      "face": 1,
+      "edge": 1
+    },
+    {
+      "id": 4,
+      "origin": 2,
+      "destination": 0,
+      "twin": 5,
+      "next": 0,
+      "face": 0,
+      "edge": 2
+    },
+    {
+      "id": 5,
+      "origin": 0,
+      "destination": 2,
+      "twin": 4,
+      "next": 3,
+      "face": 1,
+      "edge": 2
+    },
+    {
+      "id": 6,
+      "origin": 0,
+      "destination": 3,
+      "twin": 7,
+      "next": 10,
+      "face": 1,
+      "edge": 3
+    },
+    {
+      "id": 7,
+      "origin": 3,
+      "destination": 0,
+      "twin": 6,
+      "next": 5,
+      "face": 1,
+      "edge": 3
+    },
+    {
+      "id": 8,
+      "origin": 1,
+      "destination": 4,
+      "twin": 9,
+      "next": 9,
+      "face": 1,
+      "edge": 4
+    },
+    {
+      "id": 9,
+      "origin": 4,
+      "destination": 1,
+      "twin": 8,
+      "next": 1,
+      "face": 1,
+      "edge": 4
+    },
+    {
+      "id": 10,
+      "origin": 3,
+      "destination": 5,
+      "twin": 11,
+      "next": 11,
+      "face": 1,
+      "edge": 5
+    },
+    {
+      "id": 11,
+      "origin": 5,
+      "destination": 3,
+      "twin": 10,
+      "next": 7,
+      "face": 1,
+      "edge": 5
+    }
+  ],
+  "faces": [
+    {
+      "id": 0,
+      "bounded": true,
+      "area": 6.0,
+      "loops": [
+        {
+          "halfedges": [
+            0,
+            2,
+            4
+          ],
+          "vertex_path": [
+            0,
+            1,
+            2
+          ],
+          "signed_area": 6.0
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "bounded": false,
+      "area": null,
+      "loops": [
+        {
+          "halfedges": [
+            1,
+            6,
+            10,
+            11,
+            7,
+            5,
+            3,
+            8,
+            9
+          ],
+          "vertex_path": [
+            1,
+            0,
+            3,
+            5,
+            3,
+            0,
+            2,
+            1,
+            4
+          ],
+          "signed_area": -6.0
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "ok": true,
+    "problems": [],
+    "vertices": 6,
+    "edges": 6,
+    "faces": 2,
+    "halfedges": 12,
+    "components": 1,
+    "euler_characteristic": 2,
+    "euler_expected": 2,
+    "total_bounded_area": 6.0,
+    "bridge_edges": [
+      3,
+      4,
+      5
+    ],
+    "algebraic_area_sum": 0.0,
+    "area_tolerance": 1e-09
+  }
+}

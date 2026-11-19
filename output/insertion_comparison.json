@@ -1,0 +1,124 @@
+{
+  "inserted_segment": {
+    "from": [
+      0.0,
+      0.5
+    ],
+    "to": [
+      4.0,
+      2.0
+    ]
+  },
+  "before": {
+    "faces": [
+      {
+        "id": 0,
+        "area": 4.0,
+        "centroid": [
+          0.6666666666666667,
+          1.5
+        ]
+      },
+      {
+        "id": 1,
+        "area": 4.0,
+        "centroid": [
+          2.0,
+          1.5
+        ]
+      },
+      {
+        "id": 2,
+        "area": 4.0,
+        "centroid": [
+          3.3333333333333335,
+          1.5
+        ]
+      }
+    ],
+    "total_area": 12.0,
+    "checks": {
+      "ok": true,
+      "problems": [],
+      "vertices": 8,
+      "edges": 10,
+      "faces": 4,
+      "halfedges": 20,
+      "components": 1,
+      "euler_characteristic": 2,
+      "euler_expected": 2,
+      "total_bounded_area": 12.0,
+      "bridge_edges": [],
+      "algebraic_area_sum": 0.0,
+      "area_tolerance": 1e-09
+    }
+  },
+  "after": {
+    "faces": [
+      {
+        "id": 0,
+        "area": 3.0,
+        "centroid": [
+          0.6666666666666667,
+          1.875
+        ]
+      },
+      {
+        "id": 1,
+        "area": 2.333333333333334,
+        "centroid": [
+          3.333333333333333,
+          0.875
+        ]
+      },
+      {
+        "id": 2,
+        "area": 2.3333333333333335,
+        "centroid": [
+          2.0,
+          2.125
+        ]
+      },
+      {
+        "id": 3,
+        "area": 1.6666666666666665,
+        "centroid": [
+          2.0,
+          0.625
+        ]
+      },
+      {
+        "id": 4,
+        "area": 1.6666666666666665,
+        "centroid": [
+          3.3333333333333335,
+          2.375
+        ]
+      },
+      {
+        "id": 5,
+        "area": 1.0,
+        "centroid": [
+          0.6666666666666666,
+          0.375
+        ]
+      }
+    ],
+    "total_area": 12.0,
+    "checks": {
+      "ok": true,
+      "problems": [],
+      "vertices": 12,
+      "edges": 17,
+      "faces": 7,
+      "halfedges": 34,
+      "components": 1,
+      "euler_characteristic": 2,
+      "euler_expected": 2,
+      "total_bounded_area": 12.0,
+      "bridge_edges": [],
+      "algebraic_area_sum": 0.0,
+      "area_tolerance": 1e-09
+    }
+  }
+}
