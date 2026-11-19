@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GPU 骨骼蒙皮实验室</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">SKELETAL LAB / WEBGL2</p>
+          <h1>GPU 骨骼蒙皮</h1>
+        </div>
+        <div class="badges" aria-label="运行信息">
+          <span class="badge badge-live">GPU SKINNING</span>
+          <span class="badge">18 BONES</span>
+          <span class="badge">4 INFLUENCES</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="stage" aria-label="蒙皮预览">
+          <canvas id="render-canvas"></canvas>
+          <div class="stage-overlay stage-title">
+            <span id="animation-label">SWAY ↔ WAVE</span>
+            <strong id="blend-label">50%</strong>
+          </div>
+          <div class="stage-overlay stage-hint">
+            <span>拖动旋转</span>
+            <span>滚轮缩放</span>
+          </div>
+          <div class="stage-overlay stage-legend">
+            <span><i class="dot dot-cyan"></i>骨架</span>
+            <span><i class="dot dot-orange"></i>选中骨骼影响顶点</span>
+          </div>
+          <div id="error-overlay" class="error-overlay" hidden></div>
+        </section>
+
+        <aside class="panel">
+          <section class="card">
+            <div class="card-heading">
+              <h2>动画混合</h2>
+              <button id="play-button" class="icon-button" type="button">暂停</button>
+            </div>
+            <div class="track-labels">
+              <span>Sway</span>
+              <span>Wave</span>
+            </div>
+            <input id="blend-slider" class="range" type="range" min="0" max="100" value="50" />
+            <label class="check-row">
+              <input id="auto-blend" type="checkbox" />
+              <span>自动往返交叉淡化</span>
+            </label>
+            <button id="bind-button" class="wide-button" type="button">切回绑定姿态</button>
+          </section>
+
+          <section class="card">
+            <div class="card-heading">
+              <h2>单骨调试</h2>
+              <label class="switch">
+                <input id="debug-toggle" type="checkbox" checked />
+                <span></span>
+              </label>
+            </div>
+            <label class="field-label" for="bone-select">高亮骨骼</label>
+            <select id="bone-select"></select>
+            <div class="micro-stats">
+              <span>受影响顶点</span>
+              <strong id="bone-vertex-count">0</strong>
+            </div>
+            <label class="field-label" for="vertex-slider">CPU 参考顶点</label>
+            <div class="vertex-heading">
+              <span>顶点</span>
+              <strong id="vertex-index-label">#0</strong>
+            </div>
+            <input id="vertex-slider" class="range" type="range" min="0" max="1" value="0" />
+          </section>
+
+          <section class="card validation-card">
+            <div class="card-heading">
+              <h2>运行校验</h2>
+              <span id="validation-status" class="status-pill">PASS</span>
+            </div>
+            <dl class="stat-grid">
+              <div>
+                <dt>逆绑定矩阵</dt>
+                <dd id="inverse-bind-stat">检查中</dd>
+              </div>
+              <div>
+                <dt>权重归一化</dt>
+                <dd id="weight-stat">检查中</dd>
+              </div>
+              <div>
+                <dt>零权重 / 回退</dt>
+                <dd id="zero-weight-stat">检查中</dd>
+              </div>
+              <div>
+                <dt>绑定姿态回位</dt>
+                <dd id="bind-stat">检查中</dd>
+              </div>
+            </dl>
+            <p class="policy">
+              非法或负权重按 0 处理；零权重顶点刚性绑定到根骨；其余权重按总和归一。
+              法线使用蒙皮矩阵的逆转置，因此非均匀缩放不会产生错误方向。
+            </p>
+          </section>
+
+          <section class="card cpu-card">
+            <div class="card-heading">
+              <h2>逐顶点 CPU 蒙皮</h2>
+              <span class="live-dot">LIVE</span>
+            </div>
+            <div class="cpu-row">
+              <span>位置</span>
+              <code id="cpu-position">—</code>
+            </div>
+            <div class="cpu-row">
+              <span>法线</span>
+              <code id="cpu-normal">—</code>
+            </div>
+            <div class="cpu-row">
+              <span>权重</span>
+              <code id="cpu-weights">—</code>
+            </div>
+            <div class="cpu-row">
+              <span>调色板</span>
+              <code id="palette-stat">—</code>
+            </div>
+          </section>
+        </aside>
+      </main>
+    </div>
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
