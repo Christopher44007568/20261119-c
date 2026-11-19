@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="交互式三角网格局部变形与带符号体积约束求解演示"
+    />
+    <title>Volume Keep · 三角网格体积保持变形</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div>
+            <p class="eyebrow">TRIANGULAR MESH LAB</p>
+            <h1>Volume Keep</h1>
+          </div>
+        </div>
+        <div class="topbar-copy">
+          <p>局部控制点变形 + 带符号体积硬约束</p>
+          <span>Newton projection · no global scaling</span>
+        </div>
+        <div id="status-pill" class="status-pill is-ready">
+          <span class="status-dot"></span>
+          <span id="status-text">等待操作</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel setup-panel">
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">01</span>
+              <div>
+                <h2>网格样例</h2>
+                <p>用于解析体积和错误预检的封闭/非封闭网格。</p>
+              </div>
+            </div>
+            <label class="field-label" for="shape-select">当前网格</label>
+            <select id="shape-select" class="select"></select>
+            <p id="shape-description" class="muted-copy"></p>
+            <div id="preflight-list" class="check-list" aria-live="polite"></div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <span class="section-index">02</span>
+              <div>
+                <h2>局部变形</h2>
+                <p>拖动橙色控制点，或在网格顶点上按下并拖动。</p>
+              </div>
+            </div>
+            <div class="field-row">
+              <label class="field-label" for="radius-range">影响半径</label>
+              <output id="radius-value" class="field-value">0.58</output>
+            </div>
+            <input id="radius-range" class="range" type="range" min="0.08" max="1.2" step="0.01" />
+            <div class="button-grid">
+              <button id="local-bump" class="button button-primary" type="button">
+                应用局部凸起
+              </button>
+              <button id="reset-controls" class="button" type="button">清除控制点</button>
+              <button id="conflict-demo" class="button button-warn" type="button">
+                演示冲突控制点
+              </button>
+              <button id="restore-feasible" class="button" type="button" disabled>
+                恢复可行形状
+              </button>
+            </div>
+          </section>
+
+          <section class="panel-section controls-section">
+            <div class="section-heading compact">
+              <span class="section-index">03</span>
+              <div>
+                <h2>控制点</h2>
+                <p>控制顶点是硬约束，体积修正不会移动它们。</p>
+              </div>
+            </div>
+            <div id="control-list" class="control-list"></div>
+          </section>
+        </aside>
+
+        <section class="viewport-card">
+          <div class="viewport-toolbar">
+            <div class="mesh-label">
+              <span id="mesh-kind" class="mini-tag">封闭网格</span>
+              <span id="mesh-count" class="mono-copy">—</span>
+            </div>
+            <div class="view-legend">
+              <span><i class="legend-dot control"></i>控制点</span>
+              <span><i class="legend-dot invalid"></i>非法面</span>
+            </div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="viewport" aria-label="可交互的三维三角网格视图"></canvas>
+            <div class="canvas-hint">
+              <span>拖动顶点：局部变形</span>
+              <span>拖动空白：旋转</span>
+              <span>滚轮：缩放</span>
+            </div>
+            <div id="viewport-alert" class="viewport-alert" hidden>
+              <strong id="viewport-alert-title">已阻止求解</strong>
+              <span id="viewport-alert-copy"></span>
+            </div>
+            <div class="axis-note">Z-UP · ORTHO-PERSPECTIVE</div>
+          </div>
+          <div class="metric-strip">
+            <div class="metric">
+              <span class="metric-label">参考体积 V₀</span>
+              <strong id="rest-volume">—</strong>
+            </div>
+            <div class="metric">
+              <span class="metric-label">当前体积 V</span>
+              <strong id="current-volume">—</strong>
+            </div>
+            <div class="metric">
+              <span class="metric-label">体积残差 V−V₀</span>
+              <strong id="volume-residual">—</strong>
+            </div>
+            <div class="metric">
+              <span class="metric-label">控制点最大误差</span>
+              <strong id="control-residual">—</strong>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel diagnostics-panel">
+          <section class="panel-section diagnostics-head">
+            <div class="section-heading compact">
+              <span class="section-index">04</span>
+              <div>
+                <h2>约束诊断</h2>
+                <p id="solver-meta">数值容差 1e-8 · 最多 30 轮</p>
+              </div>
+            </div>
+            <div id="constraint-state" class="constraint-state is-idle">
+              <span class="constraint-kicker">CONSTRAINT STATE</span>
+              <strong id="constraint-title">尚未求解</strong>
+              <p id="constraint-copy">施加局部位移后，将在这里显示体积收敛情况。</p>
+            </div>
+            <div id="conflict-card" class="conflict-card" hidden>
+              <strong id="conflict-title">控制点冲突</strong>
+              <p id="conflict-message"></p>
+            </div>
+          </section>
+
+          <section class="panel-section iteration-section">
+            <div class="section-heading compact">
+              <span class="section-index">05</span>
+              <div>
+                <h2>每轮迭代</h2>
+                <p>残差与最大自由顶点修正量均由求解器直接记录。</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="iteration-table">
+                <thead>
+                  <tr>
+                    <th>轮次</th>
+                    <th>残差</th>
+                    <th>max ‖Δx‖</th>
+                    <th>步长</th>
+                  </tr>
+                </thead>
+                <tbody id="iteration-body">
+                  <tr class="empty-row">
+                    <td colspan="4">暂无迭代数据</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="formula-card">
+              <span class="formula-label">PROJECTION</span>
+              <code>dxᵢ = −r · ∇ᵢV / Σ‖∇V‖²</code>
+              <p>仅更新自由顶点，固定控制点；不做整体缩放。</p>
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>带符号体积 Σ det(a,b,c)/6</span>
+        <span>预检：边界 · 非流形 · 绕向 · 翻面</span>
+        <span>控制点冲突与不可行目标均回滚</span>
+      </footer>
+    </div>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
