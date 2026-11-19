@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="GPU Transform Feedback particle simulation with fixed-capacity slot recycling."
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <title>State Fountain · TF Particle Ledger</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="State Fountain home">
+          <span class="brand-mark" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <span>
+            <strong>STATE / FOUNTAIN</strong>
+            <small>TRANSFORM FEEDBACK PARTICLE RUNTIME</small>
+          </span>
+        </a>
+        <div class="topbar-status">
+          <span class="status-light"></span>
+          <span>GPU PIPELINE ONLINE</span>
+          <span class="topbar-divider"></span>
+          <span id="clock">00:00:00</span>
+        </div>
+        <div class="topbar-meta">
+          <span>WEBGL2</span>
+          <span>GLSL ES 3.00</span>
+          <span class="version-pill">BUILD 02.4</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="panel control-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">01 / EMITTER</span>
+              <h1>Particle<br />fountain</h1>
+            </div>
+            <span class="live-chip"><i></i> LIVE</span>
+          </div>
+
+          <p class="intro">
+            Fixed-capacity GPU state, continuously recycled. Every visible
+            sprite owns one slot, one lifetime, and one generation.
+          </p>
+
+          <div class="capacity-readout">
+            <div class="readout-top">
+              <span>ACTIVE SLOTS</span>
+              <span id="active-ratio">0 / 4096</span>
+            </div>
+            <div class="active-value">
+              <strong id="active-count">0000</strong>
+              <span>LIVE</span>
+            </div>
+            <div class="capacity-track">
+              <div id="capacity-fill"></div>
+              <i id="capacity-peak"></i>
+            </div>
+            <div class="capacity-footer">
+              <span><i class="dot mint"></i><span id="free-count">4096</span> free</span>
+              <span><i class="dot amber"></i><span id="reclaimed-count">0</span> recycled</span>
+              <span><i class="dot red"></i><span id="dropped-count">0</span> dropped</span>
+            </div>
+          </div>
+
+          <section class="control-block">
+            <div class="block-title">
+              <span>EMISSION RATE</span>
+              <output id="rate-output">240 <small>/s</small></output>
+            </div>
+            <input
+              id="rate"
+              class="range"
+              type="range"
+              min="0"
+              max="1200"
+              step="20"
+              value="240"
+              aria-label="Emission rate"
+            />
+            <div class="range-scale"><span>0</span><span>600</span><span>1.2K</span></div>
+          </section>
+
+          <section class="control-block">
+            <div class="block-title">
+              <span>CAPACITY</span>
+              <span class="mono-note">FIXED GPU RESERVE</span>
+            </div>
+            <div class="segmented" id="capacity-options">
+              <button data-capacity="1024">1K</button>
+              <button class="selected" data-capacity="4096">4K</button>
+              <button data-capacity="8192">8K</button>
+            </div>
+          </section>
+
+          <div class="action-grid">
+            <button id="burst-button" class="button primary">
+              <span>BURST</span>
+              <kbd>B</kbd>
+            </button>
+            <button id="pause-button" class="button">
+              <span id="pause-label">PAUSE</span>
+              <kbd>SPACE</kbd>
+            </button>
+          </div>
+          <button id="stress-button" class="text-button">
+            STRESS OVERFLOW <span>→</span>
+          </button>
+
+          <div class="policy-card">
+            <span class="eyebrow">OVERFLOW POLICY</span>
+            <div class="policy-title">
+              <strong>DROP_NEWEST</strong>
+              <span>STRICT</span>
+            </div>
+            <p>
+              When all slots are live, new emission requests are rejected.
+              Occupied or retired slots are never overwritten early.
+            </p>
+          </div>
+        </aside>
+
+        <section class="stage-wrap" aria-label="GPU particle viewport">
+          <div class="stage" id="stage">
+            <div class="stage-aura"></div>
+            <canvas id="gpu-canvas"></canvas>
+            <div class="grid-overlay"></div>
+            <div class="scanline"></div>
+
+            <div class="stage-top">
+              <div>
+                <span class="eyebrow">SIMULATION VIEWPORT</span>
+                <div class="stage-title">STATE FOUNTAIN</div>
+              </div>
+              <div class="pingpong-indicator">
+                <span id="ping-src">P0</span>
+                <i>→</i>
+                <span id="ping-dst">P1</span>
+              </div>
+            </div>
+
+            <div class="axis-label axis-y">Y / 01</div>
+            <div class="axis-label axis-x">X / 01</div>
+
+            <div class="emitter-label" aria-hidden="true">
+              <span>EMITTER_00</span>
+              <i></i>
+            </div>
+
+            <div class="stage-bottom">
+              <div class="hud-cell">
+                <span>TF DRAWS</span>
+                <strong id="tf-draws">0</strong>
+              </div>
+              <div class="hud-cell">
+                <span>STATE STRIDE</span>
+                <strong>52 B</strong>
+              </div>
+              <div class="hud-cell">
+                <span>MAX GEN</span>
+                <strong id="max-generation">G00</strong>
+              </div>
+              <div class="hud-cell wide">
+                <span>BUFFER</span>
+                <strong>POS · VEL · LIFE · COLOR · GEN</strong>
+              </div>
+              <div class="hud-hint">CLICK FIELD TO EMIT</div>
+            </div>
+
+            <div id="overflow-toast" class="overflow-toast">
+              <span>SLOT LIMIT</span>
+              <strong>DROP_NEWEST</strong>
+              <small>Emission rejected · pool is full</small>
+            </div>
+
+            <div id="webgl-error" class="webgl-error" hidden>
+              <strong>WebGL2 unavailable</strong>
+              <p>This demo requires a browser with WebGL2 transform feedback support.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel ledger-panel">
+          <div class="panel-heading compact">
+            <div>
+              <span class="eyebrow">02 / SLOT LEDGER</span>
+              <h2>Active indices</h2>
+            </div>
+            <span class="counter" id="ledger-count">00</span>
+          </div>
+
+          <div class="ledger-columns">
+            <span>INDEX</span><span>GEN</span><span>AGE</span><span>LIFE</span>
+          </div>
+          <div id="slot-ledger" class="slot-ledger" aria-live="polite"></div>
+          <div class="ledger-foot">
+            <span id="ledger-more">NO ACTIVE PARTICLES</span>
+            <span>SORTED / INDEX</span>
+          </div>
+
+          <section class="field-map">
+            <div class="block-title">
+              <span>STATE BUFFER</span>
+              <span id="buffer-size">213 KB</span>
+            </div>
+            <div class="field-row"><span>POSITION</span><i>vec3</i><b>00</b></div>
+            <div class="field-row"><span>VELOCITY</span><i>vec3</i><b>12</b></div>
+            <div class="field-row"><span>LIFETIME</span><i>vec2</i><b>24</b></div>
+            <div class="field-row"><span>COLOR</span><i>vec4</i><b>32</b></div>
+            <div class="field-row"><span>GENERATION</span><i>float</i><b>48</b></div>
+          </section>
+
+          <section class="pipeline-card">
+            <span class="eyebrow">PING-PONG PASS</span>
+            <div class="pipeline-nodes">
+              <div id="node-a" class="pipeline-node current">P0<small>READ</small></div>
+              <div class="pipeline-arrow"><i></i></div>
+              <div id="node-b" class="pipeline-node">P1<small>WRITE</small></div>
+            </div>
+            <div class="pipeline-note">
+              Transform Feedback captures all five attributes. Dead slots keep
+              their address but are rejected in the render shader.
+            </div>
+          </section>
+
+          <div class="frame-stat">
+            <span>FRAME</span>
+            <strong id="frame-rate">60.0</strong>
+            <span>FPS</span>
+            <span class="frame-spacer"></span>
+            <span id="sim-time">T+ 0.0s</span>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="statusbar">
+        <span><i class="status-dot"></i> TF INTERLEAVED / RASTERIZER DISCARD</span>
+        <span>ALLOCATOR: LIFO FREE STACK</span>
+        <span>DEAD SLOTS ARE NOT SUBMITTED TO THE VISIBLE SET</span>
+        <span class="statusbar-end">GL STATE / SYNC</span>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
