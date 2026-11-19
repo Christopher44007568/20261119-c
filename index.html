@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Volumetric Slit / Compute Study</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <canvas id="gpu-canvas" aria-label="Volumetric spotlight through slit geometry"></canvas>
+    <aside id="panel">
+      <header>
+        <div class="eyebrow">WEBGPU · COMPUTE / 16-BIT</div>
+        <h1>Slit Light Study</h1>
+        <p class="lede">Half-res volume integration · depth-guided composite</p>
+      </header>
+      <section class="readout">
+        <div><span>VOLUME</span><b id="vol-res">—</b></div>
+        <div><span>SHADOW MAP</span><b>2048²</b></div>
+        <div><span>STEPS</span><b id="step-readout">96</b></div>
+        <div><span>ANALYTIC T ERROR</span><b id="trans-error">—</b></div>
+        <div><span>CONVERGENCE</span><b id="conv-error">—</b></div>
+      </section>
+      <section class="controls">
+        <label>
+          <span>DEBUG VIEW</span>
+          <select id="view-select">
+            <option value="final">Final composite</option>
+            <option value="half">Half-res volume</option>
+            <option value="guided">Depth-guided volume</option>
+            <option value="weights">Upsampling weights</option>
+            <option value="scene">Opaque scene</option>
+            <option value="shadow">Shadow depth</option>
+          </select>
+        </label>
+        <label>
+          <span>STEPS <output id="steps-out">96</output></span>
+          <input id="steps" type="range" min="16" max="192" step="8" value="96">
+        </label>
+        <label>
+          <span>DENSITY <output id="density-out">0.42</output></span>
+          <input id="density" type="range" min="0.1" max="1.2" step="0.05" value="0.42">
+        </label>
+        <label>
+          <span>SPOT INTENSITY <output id="intensity-out">0.5</output></span>
+          <input id="intensity" type="range" min="0.3" max="2.5" step="0.1" value="0.5">
+        </label>
+        <label class="check">
+          <input id="dither" type="checkbox">
+          <span>Stochastic step offset</span>
+        </label>
+      </section>
+      <footer>
+        <div class="legend" id="legend">RGB = four-tap weights · cyan = depth rejection</div>
+        <div id="status">Initializing WebGPU…</div>
+      </footer>
+    </aside>
+    <div id="error" hidden></div>
+    <script type="module" src="./src/main.mjs"></script>
+  </body>
+</html>
